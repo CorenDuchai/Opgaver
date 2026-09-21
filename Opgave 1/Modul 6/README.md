@@ -6,8 +6,8 @@ Formålet med modulet er at samle og automatisere centrale dele af Linux 101-kon
 
 Der er lavet to scripts:
 
-- `setup.sh` — automatiserer størstedelen af serverkonfigurationen fra modul 1-5
-- `healthcheck.sh` — udfører et selvstændigt sikkerheds- og driftscheck af serveren
+- `setup.sh` - automatiserer størstedelen af serverkonfigurationen fra modul 1-5
+- `healthcheck.sh` - udfører et selvstændigt sikkerheds- og driftscheck af serveren
 
 Begge scripts bruger funktioner, variable, betingelser og fejlhåndtering med `set -euo pipefail`.
 
