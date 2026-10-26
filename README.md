@@ -72,10 +72,33 @@ Opgaven omfatter blandt andet:
 - analyse med `ss`, `dig`, `curl`, `openssl s_client`, `tcpdump` og Wireshark
 - sammenligning af klartekst-HTTP og krypteret TLS Application Data
 
+## Opgave 4 - Introduktion til HTTP
+
+[Se dokumentation for Opgave 4](Opgave%204/README.md)
+
+Opgave 4 undersøger HTTP/1.1 på request/response-niveau med cURL, Netcat og Python sockets.
+
+Opgaven omfatter blandt andet:
+
+- lokal Python-webserver på loopback (`127.0.0.1:8000`)
+- HTTP GET, statuslinje, headers og verbose output med cURL
+- manuelle HTTP-requests med Netcat, CRLF og `Host`-header
+- observation af, at Python-serveren accepterer en HTTP/1.1-request uden `Host`
+- præcis måling af HTTP-response: 325 bytes body + 186 bytes headers/statuslinje = 511 bytes
+- sammenligning med Edge DevTools over SSH-portforwarding
+- HTTP-caching: `304 Not Modified` og `If-Modified-Since`
+- egen HTTP-klient og -server med Python `socket`
+- test af `200 OK` og `404 Not Found`
+- refleksioner om HTTP-standarder, logging og sikkerhedsrelevans
+
+De fem obligatoriske delopgaver er gennemført. Valgfri parøvelse (opgave 6) er sprunget over, da der ikke var en anden lokal akademist at gennemføre den med.
+
 ## Repository-struktur
 
 ```text
 Opgave 1/   Linux 101
 Opgave 2/   Windows OS intro / Active Directory lab
 Opgave 3/   Netværks-lag / TCP, DNS, HTTP og TLS
+Opgave 4/   Introduktion til HTTP / cURL, Netcat og Python sockets
+Opgave 5/   OWASP Juice Shop (opgaveoplæg)
 ```
