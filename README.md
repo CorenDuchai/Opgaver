@@ -93,6 +93,14 @@ Opgaven omfatter blandt andet:
 
 De fem obligatoriske delopgaver er gennemført. Valgfri parøvelse (opgave 6) er sprunget over, da der ikke var en anden lokal akademist at gennemføre den med.
 
+## Opgave 5 - OWASP Juice Shop
+
+[Se dokumentation for Opgave 5](Opgave%205/README.md)
+
+Opgave 5 undersøger sikkerhedssårbarheder i en lokal OWASP Juice Shop-installation i Docker.
+
+Indtil videre er **17/186 challenges** løst (28. oktober 2026), og der er påvist mindst tre konkrete fund: usikre sikkerhedsspørgsmål/password reset, tom brugerregistrering via API og information disclosure gennem fejlhåndtering. README'en dokumenterer desuden OSINT, steganografi med OpenStego, browser/HTTP-undersøgelser og forslag til afhjælpning.
+
 ## Repository-struktur
 
 ```text
@@ -100,5 +108,5 @@ Opgave 1/   Linux 101
 Opgave 2/   Windows OS intro / Active Directory lab
 Opgave 3/   Netværks-lag / TCP, DNS, HTTP og TLS
 Opgave 4/   Introduktion til HTTP / cURL, Netcat og Python sockets
-Opgave 5/   OWASP Juice Shop (opgaveoplæg)
+Opgave 5/   OWASP Juice Shop / PoC, sårbarheder og afhjælpning
 ```
