@@ -60,7 +60,7 @@ Juice Shop-eksporten `owasp_juice_shop-2026-10-28.json` indeholder kodede status
 | Bjoern's Favorite Pet | 3 | Broken Authentication | OSINT om Zaya og password reset |
 | Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
 | Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
-| **Login Jim** | **3** | **Injection** | **Løst ved normalt login med password, der først blev nulstillet via OSINT. Ingen SQL-injection afprøvet eller påvist.** |
+| **Login Jim** | **3** | **Injection** | **Login lykkedes efter password-reset via OSINT; ingen SQL-injection afprøvet i HTTP-requesten. Den relaterede coding challenge blev særskilt løst ved at identificere og rette SQL-injection-sårbar kode.** |
 | Privacy Policy | 1 | Miscellaneous | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
 | Repetitive Registration | 1 | Improper Input Validation | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
 | Reset Jim's Password | 3 | Broken Authentication | Star Trek-spor → Samuel |
@@ -72,11 +72,11 @@ Juice Shop-eksporten `owasp_juice_shop-2026-10-28.json` indeholder kodede status
 | Reset Uvogin's Password | 4 | Sensitive Data Exposure | OSINT om yndlingsfilm |
 | Mass Dispel | 1 | Miscellaneous | Shift + klik på X |
 
-**Vigtig skelnen:** Juice Shops kategorier beskriver *den tilsigtede* sårbarhed for en challenge, men ikke nødvendigvis den metode, der udløste løsningsmarkeringen. Eksempelvis blev **Login Jim** registreret som løst efter password-reset og almindeligt login. Dette er **ikke dokumentation for SQL Injection**, selv om challenge-kategorien er Injection.
+**Vigtig skelnen:** Juice Shops kategorier beskriver *den tilsigtede* sårbarhed for en challenge, men ikke nødvendigvis den metode, der udløste løsningsmarkeringen. Eksempelvis blev **Login Jim** registreret som løst efter password-reset og almindeligt login. Dette er **ikke dokumentation for et udført SQL Injection-angreb**. Separat blev **Login Jims coding challenge** løst med kodeanalyse og fejlrettelse af en usikker SQL-forespørgsel.
 
 ### Coding challenges
 
-Eksporten angiver **to coding challenges** med både `Find It` og `Fix It` løst. De er knyttet til **Bjoern's Favorite Pet** og **Score Board**. Ved Bjoern blev en sikker reset-løsning med kortlivet engangslink valgt; den konkrete kodebesvarelse for Score Board er ikke dokumenteret i arbejdsnoterne.
+**Login Jims coding challenge er gennemført:** Sårbarheden blev fundet i login-funktionens SQL-konstruktion (linje 15 i det viste kodeudsnit), hvor brugerinput indgår direkte i en SQL-streng. Der blev derefter valgt en rettelse i Juice Shops *Find It/Fix It*-interface. En sikker implementering bruger parameteriserede forespørgsler i stedet for at sammenkæde SQL og brugerinput. Dette er kodeanalyse og fejlrettelse – **ikke** en test, hvor SQL Injection blev udnyttet til login. Bjoerns relaterede coding challenge blev også løst, med en sikrere reset-løsning baseret på et kortlivet engangslink. Eksporten angiver fire gennemførte coding-dele (to Find It og to Fix It).
 
 Den rå eksport indeholder `continueCode`-felter til gendannelse af progression. Disse er ikke gengivet i et offentligt repository.
 ---
