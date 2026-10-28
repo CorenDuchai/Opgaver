@@ -1,7 +1,7 @@
 # Opgave 5 – OWASP Juice Shop
 
 **Specialisterne Academy · 28. oktober 2026**  
-**Status:** I gang – 17 af 186 challenges løst ved seneste optælling. 11 % af *Hacking Challenges* gennemført.
+**Status:** I gang – 18/186 deludfordringer ifølge Juice Shop-eksporten fra 28. oktober 2026: 14 hacking-challenges og fire coding-dele (Find It/Fix It). Et tidligere screenshot viste 17/186 og 11 % Hacking Challenges.
 
 ## Formål
 
@@ -41,40 +41,44 @@ Derefter blev `http://127.0.0.1:3000` åbnet lokalt. Denne fremgangsmåde kræve
 
 ## Resultat og status
 
-Seneste Score Board-observation, 28. oktober 2026:
+Juice Shop-eksporten `owasp_juice_shop-2026-10-28.json` indeholder kodede status-ID'er, som kan knyttes til applikationens officielle challenge-liste. Den bekræfter **14 hacking-challenges** og **fire løste coding-dele** (Find It og Fix It for hver af to coding challenges), i alt **18/186**. Tidligere screenshot viste **17/186**; eksporten repræsenterer en senere status.
 
 | Sværhedsgrad | Løst | Total |
 | --- | ---: | ---: |
-| 1 stjerne | 7 | 27 |
+| 1 stjerne | 8 | 27 |
 | 2 stjerner | 2 | 29 |
 | 3 stjerner | 5 | 51 |
 | 4 stjerner | 2 | 40 |
 | 5 stjerner | 1 | 25 |
 | 6 stjerner | 0 | 14 |
-| **I alt** | **17** | **186** |
+| **I alt** | **18** | **186** |
 
-Score Board viste også **11 % Hacking Challenges**. Denne procentsats beregnes separat og er derfor ikke det samme som 17/186.
+### Bekræftede løste hacking-challenges
 
-Nedenfor er de challenges, som er identificeret ved navn i arbejdsnoterne. Listen er **ikke nødvendigvis alle 17**; de resterende navne kan suppleres fra Score Board.
+| Challenge | Stjerner | Juice Shop-kategori | Metode og begrænsning |
+| --- | ---: | --- | --- |
+| Bjoern's Favorite Pet | 3 | Broken Authentication | OSINT om Zaya og password reset |
+| Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
+| Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
+| **Login Jim** | **3** | **Injection** | **Løst ved normalt login med password, der først blev nulstillet via OSINT. Ingen SQL-injection afprøvet eller påvist.** |
+| Privacy Policy | 1 | Miscellaneous | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
+| Repetitive Registration | 1 | Improper Input Validation | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
+| Reset Jim's Password | 3 | Broken Authentication | Star Trek-spor → Samuel |
+| Reset Morty's Password | 5 | Broken Anti Automation | Obfuskeret svar: `5N0wb41L`; ingen særskilt rate-limit-bypass påvist |
+| Score Board | 1 | Miscellaneous | Åbnet via link fra appen |
+| Security Policy | 2 | Miscellaneous | `/security.txt` åbnet og læst |
+| Steganography | 4 | Security through Obscurity | OpenStego på `5.png`, identificerede Pickle Rick |
+| Missing Encoding | 1 | Improper Input Validation | Kodede `#` i billede-URL som `%23` |
+| Reset Uvogin's Password | 4 | Sensitive Data Exposure | OSINT om yndlingsfilm |
+| Mass Dispel | 1 | Miscellaneous | Shift + klik på X |
 
-| Challenge | Resultat / metode |
-| --- | --- |
-| Reset Bjoern's Password | Sikkerhedsspørgsmål besvaret gennem offentlige oplysninger om kæledyret Zaya |
-| Reset Jim's Password | Star Trek-reference i produktanmeldelse → James T. Kirk → broderen George Samuel Kirk |
-| Reset Uvogin's Password | OSINT omkring yndlingsfilm, *The Silence of the Lambs* |
-| Reset Morty's Password | Rick and Morty-reference og obfuskeret navn på familiens hund Snowball |
-| Empty User Registration | API accepterede tom e-mail og adgangskode; `201 Created` |
-| Error Handling | Sletning af adresse gav `500` med detaljeret Sequelize/SQLite-fejl |
-| Repetitive Registration | Registreret som løst; detaljeret fremgangsmåde er ikke dokumenteret |
-| Missing Encoding | Manglende procentkodning af `#` i billed-URL på Photo Wall |
-| Score Board | Skjult rute åbnet via link, som appen selv viste efter en coding challenge |
-| Security Policy | `/security.txt` åbnet og gennemgået |
-| Steganography | Skjulte data udtrukket fra billedet `5.png`; identificerede Pickle Rick |
-| Mass Dispel | Alle challenge-notifikationer lukket med Shift + klik på et X |
-| Relateret coding challenge til Bjoern | Valg af sikker password-reset-model med kortlivet engangslink |
+**Vigtig skelnen:** Juice Shops kategorier beskriver *den tilsigtede* sårbarhed for en challenge, men ikke nødvendigvis den metode, der udløste løsningsmarkeringen. Eksempelvis blev **Login Jim** registreret som løst efter password-reset og almindeligt login. Dette er **ikke dokumentation for SQL Injection**, selv om challenge-kategorien er Injection.
 
-**Bemærk:** En gennemført challenge er ikke automatisk dokumentation for en selvstændig kritisk sårbarhed. Derfor er de vigtigste sikkerhedsfund beskrevet særskilt nedenfor.
+### Coding challenges
 
+Eksporten angiver **to coding challenges** med både `Find It` og `Fix It` løst. De er knyttet til **Bjoern's Favorite Pet** og **Score Board**. Ved Bjoern blev en sikker reset-løsning med kortlivet engangslink valgt; den konkrete kodebesvarelse for Score Board er ikke dokumenteret i arbejdsnoterne.
+
+Den rå eksport indeholder `continueCode`-felter til gendannelse af progression. Disse er ikke gengivet i et offentligt repository.
 ---
 
 ## Sikkerhedsfund 1 – Usikre sikkerhedsspørgsmål / Broken Authentication
@@ -307,7 +311,7 @@ Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel 
 - [x] Flere OSINT- og forensics-øvelser gennemført.
 - [ ] Gennemgå den faktiske kildekode og angiv konkrete filer/linjer for de tre hovedfund.
 - [ ] Tilføj **redigerede** screenshots af PoC, HTTP-responses og badges.
-- [ ] Udfyld navnene på eventuelle manglende challenges i listen over 17 løste.
+- [x] Udfyld navnene på de 14 løste hacking-challenges ud fra Juice Shop-eksporten.
 - [ ] Forbered 10–15 minutters præsentation ud fra de tre fund og ét forensics-eksempel.
 - [ ] Valgfri patch eller regressionstest er **ikke** implementeret.
 
