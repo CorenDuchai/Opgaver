@@ -99,7 +99,7 @@ De fem obligatoriske delopgaver er gennemført. Valgfri parøvelse (opgave 6) er
 
 Opgave 5 undersøger sikkerhedssårbarheder i en lokal OWASP Juice Shop-installation i Docker.
 
-Indtil videre er **17/186 challenges** løst (28. oktober 2026), og der er påvist mindst tre konkrete fund: usikre sikkerhedsspørgsmål/password reset, tom brugerregistrering via API og information disclosure gennem fejlhåndtering. README'en dokumenterer desuden OSINT, steganografi med OpenStego, browser/HTTP-undersøgelser og forslag til afhjælpning.
+Seneste eksport bekræfter **26/186 løste deludfordringer** (30. oktober 2026: 14 hacking-challenges og 12 coding-dele), og der er påvist mindst tre konkrete fund: usikre sikkerhedsspørgsmål/password reset, tom brugerregistrering via API og information disclosure gennem fejlhåndtering. README'en dokumenterer desuden OSINT, steganografi med OpenStego, browser/HTTP-undersøgelser og forslag til afhjælpning.
 
 ## Repository-struktur
 
