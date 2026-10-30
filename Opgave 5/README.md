@@ -77,8 +77,8 @@ Eksporten `owasp_juice_shop-2026-10-30.json` er sammenholdt med de to tidligere 
 | Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
 | Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
 | **Login Jim** | **3** | **Injection** | **Løst via almindeligt login efter OSINT-baseret password reset. Ingen SQL Injection blev udnyttet ved dette login.** |
-| Privacy Policy | 1 | Miscellaneous | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
-| Repetitive Registration | 1 | Improper Input Validation | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
+| Privacy Policy | 1 | Miscellaneous | Åbnede **Account → Privacy & Security → Privacy Policy**, rute `/#/privacy-security/privacy-policy` |
+| Repetitive Registration | 1 | Improper Input Validation | Blev løst med samme `curl`-request som Empty User Registration: `passwordRepeat` var udeladt |
 | Reset Jim's Password | 3 | Broken Authentication | Star Trek-spor → Samuel |
 | Reset Morty's Password | 5 | Broken Anti Automation | OSINT om Snowball og svaret `5N0wb41L`; ingen rate-limit-bypass afprøvet i password-reset-forløbet |
 | Score Board | 1 | Miscellaneous | Åbnet via link fra appen |
@@ -171,6 +171,8 @@ Location: /api/Users/25
 ```
 
 Svarbodyen rapporterede blandt andet `"status":"success"`, `"id":25` og `"email":""`. Requesten indeholdt hverken gyldig e-mail, adgangskode eller et `passwordRepeat`-felt.
+
+**To challenges med én request:** Den samme request opfyldte også **Repetitive Registration**, fordi `passwordRepeat` var udeladt. Juice Shops challenge-kode markerer den som løst, når `req.body.passwordRepeat !== req.body.password`. Her var `passwordRepeat` `undefined`, mens `password` var den tomme streng. Det er separat fra Empty User Registration, der kontrollerer `email === ''` og `password === ''`. Dermed blev begge markeret uden brug af Burp Suite.
 
 Juice Shop registrerede også:
 
@@ -271,6 +273,10 @@ Ved at erstatte `#` med `%23` kunne billedet indlæses, og challen­gen `Missing
 
 Dette er dokumenteret som en fejl i URL-kodning og applikationens funktionalitet – **ikke** som en påvist kritisk sikkerhedssårbarhed.
 
+### Privacy Policy
+
+Privacy Policy-challengen blev løst ved at åbne siden gennem brugergrænsefladen: **Account → Privacy & Security → Privacy Policy**, som fører til `http://127.0.0.1:3000/#/privacy-security/privacy-policy`.
+
 ### Security Policy
 
 Filen blev fundet direkte på:
@@ -302,7 +308,7 @@ Arbejdsgang:
 
 - **Score Board:** Siden blev åbnet via et link fra Juice Shop efter gennemført coding challenge. Det viste, at appens egen navigation kan afsløre ellers skjulte routes.
 - **Mass Dispel:** `Shift + klik` på et X lukker alle grønne challenge-notifikationer. Den handling udløste en særskilt *Good Practice*-challenge.
-- **Repetitive Registration:** Registreret som løst, men den nøjagtige manipulation er endnu ikke beskrevet i noterne.
+- **Repetitive Registration:** Blev løst med samme `curl`-request som Empty User Registration, idet `passwordRepeat` blev udeladt.
 - **Juicy the Smart Assistant:** Chatbotten oplyste, at AI-endpointet ikke var konfigureret eller tilgængeligt i denne installation. Det er ikke dokumenteret som en sikkerhedssårbarhed.
 - Offentlige brugernavne og e-mailadresser fra anmeldelser er nyttige OSINT-spor, men udgør **ikke automatisk** en sårbarhed.
 
