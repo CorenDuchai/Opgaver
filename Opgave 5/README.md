@@ -76,7 +76,7 @@ Eksporten `owasp_juice_shop-2026-10-30.json` er sammenholdt med de to tidligere 
 | Bjoern's Favorite Pet | 3 | Broken Authentication | OSINT om Zaya og password reset |
 | Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
 | Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
-| **Login Jim** | **3** | **Injection** | **Løst via almindeligt login efter OSINT-baseret password reset. Ingen SQL Injection blev udnyttet ved dette login.** |
+| **Login Jim** | **3** | **Injection** | **Blev først opdaget efter Reset Jim's Password. Løst ved almindeligt login med den netop ændrede adgangskode; ingen SQL Injection blev brugt.** |
 | Privacy Policy | 1 | Miscellaneous | Åbnede **Account → Privacy & Security → Privacy Policy**, rute `/#/privacy-security/privacy-policy` |
 | Repetitive Registration | 1 | Improper Input Validation | Blev løst med samme `curl`-request som Empty User Registration: `passwordRepeat` var udeladt |
 | Reset Jim's Password | 3 | Broken Authentication | OSINT: Jims Starfleet-kommentar → James T. Kirk → broderens mellemnavn `Samuel`; brugt på **Forgot Password**-siden til at nulstille adgangskoden |
@@ -111,11 +111,11 @@ De rå `continueCode`-værdier er ikke medtaget i det offentlige repository.
 
 ### Fremgangsmåde og PoC
 
-Min undersøgelse begyndte **ikke** med et bestemt login eller en bestemt person. Jeg gik først **systematisk alle produkter og deres anmeldelser igennem** og noterede de e-mailadresser, som brugerne havde offentliggjort, samt hvad de faktisk skrev i deres reviews. Det gav et første overblik over brugerkonti og mulige OSINT-spor. Derefter sammenholdt jeg de enkelte kommentarer med åbne kilder og testede de relevante svar via `Forgot Password`-funktionen.
+Min undersøgelse begyndte **ikke** med et bestemt login eller en bestemt person. Jeg gik først **systematisk alle produkter og deres anmeldelser igennem** og noterede de e-mailadresser, som brugerne havde offentliggjort, samt hvad de faktisk skrev i deres reviews. Det gav et første overblik over brugerkonti og mulige OSINT-spor, herunder `bender@juice-sh.op`. Derefter sammenholdt jeg relevante kommentarer med åbne kilder. **Det var dog først efter opdagelsen af Score Board**, at jeg begyndte at vælge konkrete challenges ud fra deres opgavebeskrivelser.
 
-**Eksempel – Jim:** En af anmeldelserne nævnte hans **Star Trek-/Starfleet-uniform**. Det var ledetråden til, at brugeren `Jim` sandsynligvis var en reference til **James Tiberius Kirk**. Efter at have identificeret referencen undersøgte jeg Kirks familie og fandt broderen **George Samuel Kirk**. Svaret `Samuel` blev derefter brugt i sikkerhedsspørgsmålet på Forgot Password-siden, så adgangskoden kunne nulstilles.
+**Kronologien omkring Jim:** Først gennemgik jeg produkterne og anmeldelserne, hvor Jims kommentar om en **Star Trek-/Starfleet-uniform** blev noteret. Under arbejdet med **Bjoern's Favorite Pet-coding challenge** viste Juice Shop mig et link til **Score Board**; jeg vidste ikke på forhånd, at siden fandtes. Jeg trykkede på linket og gennemgik derefter listen over challenges. **Reset Jim's Password** fangede min interesse, fordi beskrivelsen direkte henviste til **Forgot Password** og det oprindelige svar på sikkerhedsspørgsmålet. Jeg vendte tilbage til Star Trek-sporet: Jim var sandsynligvis en reference til **James Tiberius Kirk**. OSINT om hans familie førte til broderen **George Samuel Kirk**, og svaret `Samuel` virkede på Forgot Password-siden. **Først efter nulstillingen** opdagede jeg **Login Jim**, som blev markeret løst, da jeg loggede ind normalt med den nye adgangskode. Der blev **ikke** brugt SQL Injection til dette login.
 
-Arbejdsmetoden var altså **gennemgang af applikationens offentlige data → notater over e-mailadresser og indhold → OSINT og sammenkobling af oplysninger → test af password reset**. En offentlig e-mailadresse eller anmeldelse er ikke i sig selv en sårbarhed; problemet opstår, når offentlige oplysninger kan bruges som adgangskontrol.
+Arbejdsmetoden var altså **gennemgang af applikationens offentlige data → notater over e-mailadresser og indhold → opdagelse af Score Board → valg af challenge ud fra beskrivelsen → OSINT og sammenkobling af oplysninger → test af password reset → almindeligt login**. En offentlig e-mailadresse eller anmeldelse er ikke i sig selv en sårbarhed; problemet opstår, når offentlige oplysninger kan bruges som adgangskontrol.
 
 | Konto | Ledetråd / research | Svar anvendt |
 | --- | --- | --- |
@@ -310,7 +310,7 @@ Arbejdsgang:
 
 ### Andre challenges og observationer
 
-- **Score Board:** Jeg vidste ikke engang, at Score Board fandtes. Under **Bjoern's Favorite Pet-coding challenge** viste Juice Shop et link til siden. Da jeg trykkede på linket, blev udfordringen registreret som løst. Det var altså ikke resultatet af en selvstændig rekognoscering efter en skjult rute.
+- **Score Board:** Jeg vidste ikke engang, at Score Board fandtes. Under **Bjoern's Favorite Pet-coding challenge** viste Juice Shop et link til siden. Da jeg trykkede på linket, blev udfordringen registreret som løst. Jeg gennemgik **først derefter** challenge-listen og valgte blandt andet **Reset Jim's Password**, fordi opgavebeskrivelsen eksplicit nævnte Forgot Password. Det var ikke resultatet af en selvstændig rekognoscering efter en skjult rute.
 - **Mass Dispel:** `Shift + klik` på et X lukker alle grønne challenge-notifikationer. Den handling udløste en særskilt *Good Practice*-challenge.
 - **Repetitive Registration:** Blev løst med samme `curl`-request som Empty User Registration, idet `passwordRepeat` blev udeladt.
 - **Juicy the Smart Assistant:** Chatbotten oplyste, at AI-endpointet ikke var konfigureret eller tilgængeligt i denne installation. Det er ikke dokumenteret som en sikkerhedssårbarhed.
