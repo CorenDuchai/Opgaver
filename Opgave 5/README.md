@@ -14,7 +14,7 @@ Applikationen er med vilje usikker. Alle forsøg er udført i mit autoriserede, 
 README'en kan bruges direkte som præsentation **uden live-demo**. Foreslået rækkefølge:
 
 1. **Introduktion (1 min):** Hvorfor OWASP Juice Shop, og hvordan VM/Docker/SSH-tunnel er sat op.
-2. **Arbejdsmetode (1 min):** Browser, DevTools, OSINT og `curl`; se den konkrete HTTP-kommunikation.
+2. **Arbejdsmetode (1 min):** Startede med at gennemgå **alle produkter og anmeldelser**, noterede e-mailadresser og kommentarer, sammenholdt dem med OSINT og brugte derefter DevTools og `curl` til konkrete HTTP-tests.
 3. **Fund 1 (3 min):** Usikre sikkerhedsspørgsmål, fx OSINT om Jims Star Trek-reference → `Samuel` → **Forgot Password**-reset; Mortys hund **Snuffles/Snowball** og leetspeak som andet eksempel.
 4. **Fund 2 (2 min):** Tom brugerregistrering; vis `curl`-requesten og `HTTP/1.1 201 Created`.
 5. **Fund 3 (2 min):** Adresse-sletning → `HTTP 500`, SQLite/Sequelize-fejl og interne stier.
@@ -81,7 +81,7 @@ Eksporten `owasp_juice_shop-2026-10-30.json` er sammenholdt med de to tidligere 
 | Repetitive Registration | 1 | Improper Input Validation | Blev løst med samme `curl`-request som Empty User Registration: `passwordRepeat` var udeladt |
 | Reset Jim's Password | 3 | Broken Authentication | OSINT: Jims Starfleet-kommentar → James T. Kirk → broderens mellemnavn `Samuel`; brugt på **Forgot Password**-siden til at nulstille adgangskoden |
 | Reset Morty's Password | 5 | Broken Anti Automation | OSINT om Morty Smiths hund **Snuffles**, kaldet **Snowball** i et afsnit; navnet blev skrevet i 1337/leetspeak som `5N0wb41L` og brugt på **Forgot Password**-siden. Ingen rate-limit-bypass afprøvet |
-| Score Board | 1 | Miscellaneous | Åbnede et link til Score Board, som Juice Shop viste **under Bjoern's Favorite Pet-coding challenge**; ingen selvstændig søgning efter den skjulte rute |
+| Score Board | 1 | Miscellaneous | Juice Shop viste selv et link **under Bjoern's Favorite Pet-coding challenge**; jeg kendte ikke Score Board på forhånd og trykkede blot på linket |
 | Security Policy | 2 | Miscellaneous | `/security.txt` åbnet og læst |
 | Steganography | 4 | Security through Obscurity | Skjult billede udtrukket med OpenStego fra `5.png`; forsøgte reverse image lookup (TinEye: 0 resultater), derefter identificerede **Google AI** figuren som **Pickle Rick** |
 | Missing Encoding | 1 | Improper Input Validation | Kodede `#` i billede-URL som `%23` |
@@ -111,7 +111,11 @@ De rå `continueCode`-værdier er ikke medtaget i det offentlige repository.
 
 ### Fremgangsmåde og PoC
 
-Jeg gennemgik offentlige produktanmeldelser i Juice Shop og koblede brugernes oplysninger til baggrundsviden eller OSINT-søgninger. Derefter blev svarene anvendt i `Forgot Password`-funktionen.
+Min undersøgelse begyndte **ikke** med et bestemt login eller en bestemt person. Jeg gik først **systematisk alle produkter og deres anmeldelser igennem** og noterede de e-mailadresser, som brugerne havde offentliggjort, samt hvad de faktisk skrev i deres reviews. Det gav et første overblik over brugerkonti og mulige OSINT-spor. Derefter sammenholdt jeg de enkelte kommentarer med åbne kilder og testede de relevante svar via `Forgot Password`-funktionen.
+
+**Eksempel – Jim:** En af anmeldelserne nævnte hans **Star Trek-/Starfleet-uniform**. Det var ledetråden til, at brugeren `Jim` sandsynligvis var en reference til **James Tiberius Kirk**. Efter at have identificeret referencen undersøgte jeg Kirks familie og fandt broderen **George Samuel Kirk**. Svaret `Samuel` blev derefter brugt i sikkerhedsspørgsmålet på Forgot Password-siden, så adgangskoden kunne nulstilles.
+
+Arbejdsmetoden var altså **gennemgang af applikationens offentlige data → notater over e-mailadresser og indhold → OSINT og sammenkobling af oplysninger → test af password reset**. En offentlig e-mailadresse eller anmeldelse er ikke i sig selv en sårbarhed; problemet opstår, når offentlige oplysninger kan bruges som adgangskontrol.
 
 | Konto | Ledetråd / research | Svar anvendt |
 | --- | --- | --- |
@@ -306,7 +310,7 @@ Arbejdsgang:
 
 ### Andre challenges og observationer
 
-- **Score Board:** Under arbejdet med **Bjoern's Favorite Pet-coding challenge** viste Juice Shop selv et link til Score Board. Jeg trykkede på det, og udfordringen blev dermed løst uden selv at lede efter den skjulte rute.
+- **Score Board:** Jeg vidste ikke engang, at Score Board fandtes. Under **Bjoern's Favorite Pet-coding challenge** viste Juice Shop et link til siden. Da jeg trykkede på linket, blev udfordringen registreret som løst. Det var altså ikke resultatet af en selvstændig rekognoscering efter en skjult rute.
 - **Mass Dispel:** `Shift + klik` på et X lukker alle grønne challenge-notifikationer. Den handling udløste en særskilt *Good Practice*-challenge.
 - **Repetitive Registration:** Blev løst med samme `curl`-request som Empty User Registration, idet `passwordRepeat` blev udeladt.
 - **Juicy the Smart Assistant:** Chatbotten oplyste, at AI-endpointet ikke var konfigureret eller tilgængeligt i denne installation. Det er ikke dokumenteret som en sikkerhedssårbarhed.
