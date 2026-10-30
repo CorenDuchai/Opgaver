@@ -1,13 +1,27 @@
 # Opgave 5 – OWASP Juice Shop
 
-**Specialisterne Academy · 28. oktober 2026**  
-**Status:** I gang – 18/186 deludfordringer ifølge Juice Shop-eksporten fra 28. oktober 2026: 14 hacking-challenges og fire coding-dele (Find It/Fix It). Et tidligere screenshot viste 17/186 og 11 % Hacking Challenges.
+**Specialisterne Academy · 30. oktober 2026 (seneste statuskontrol)**  
+**Status:** I gang – **26/186 deludfordringer** ifølge Juice Shop-eksporten fra 30. oktober 2026: **14 hacking-challenges + 6 Find It + 6 Fix It**. Samme progressionskoder som i den seneste eksport 28. oktober. Tidligere optælling på 18 var ufuldstændig.
 
 ## Formål
 
 Opgaven handler om at identificere og udnytte mindst tre konkrete sårbarheder i OWASP Juice Shop, dokumentere proof-of-concept (PoC), forklare årsager og anbefale afbødende tiltag. Resultaterne skal kunne bruges til en præsentation på 10–15 minutter.
 
 Applikationen er med vilje usikker. Alle forsøg er udført i mit autoriserede, lokale undervisningsmiljø. Opgaveoplægget findes i [OWASP Juice-shop.pdf](./OWASP%20Juice-shop.pdf).
+
+## Præsentationsguide (10–15 minutter)
+
+README'en kan bruges direkte som præsentation **uden live-demo**. Foreslået rækkefølge:
+
+1. **Introduktion (1 min):** Hvorfor OWASP Juice Shop, og hvordan VM/Docker/SSH-tunnel er sat op.
+2. **Arbejdsmetode (1 min):** Browser, DevTools, OSINT og `curl`; se den konkrete HTTP-kommunikation.
+3. **Fund 1 (3 min):** Usikre sikkerhedsspørgsmål, fx Jims Star Trek-spor → `Samuel` → password reset.
+4. **Fund 2 (2 min):** Tom brugerregistrering; vis `curl`-requesten og `HTTP/1.1 201 Created`.
+5. **Fund 3 (2 min):** Adresse-sletning → `HTTP 500`, SQLite/Sequelize-fejl og interne stier.
+6. **Andre erfaringer (1–2 min):** Steganografi, coding-challenges, forskel på challenge-status og faktisk udnyttet sårbarhed.
+7. **Konklusion (1 min):** Server-side inputvalidering, sikker password reset og fejlhåndtering; SOC-relevans.
+
+**Præsentationsprincip:** Brug fundenes eksisterende kodeblokke som evidence. Spring den lange challenge-oversigt over, medmindre der bliver spurgt. En grøn challenge-markering beviser ikke nødvendigvis, at den tilsigtede angrebsmetode blev brugt.
 
 ## Labmiljø og opsætning
 
@@ -41,30 +55,32 @@ Derefter blev `http://127.0.0.1:3000` åbnet lokalt. Denne fremgangsmåde kræve
 
 ## Resultat og status
 
-Juice Shop-eksporten `owasp_juice_shop-2026-10-28.json` indeholder kodede status-ID'er, som kan knyttes til applikationens officielle challenge-liste. Den bekræfter **14 hacking-challenges** og **fire løste coding-dele** (Find It og Fix It for hver af to coding challenges), i alt **18/186**. Tidligere screenshot viste **17/186**; eksporten repræsenterer en senere status.
+Eksporten `owasp_juice_shop-2026-10-30.json` er sammenholdt med de to tidligere JSON-eksporter. De tre progressionskoder er identiske med eksporten fra 28. oktober (anden eksport). Koderne er afkodet med de salte/Hashids-parametre, som Juice Shops egen kode bruger, og ID'erne er sammenholdt med den officielle challenge-liste.
+
+**Status: 26/186 løste deludfordringer**, fordelt på **14 hacking-challenges** og **12 coding-dele**: seks `Find It` og seks `Fix It`. Den tidligere README angav 18/186, fordi kun to af de seks coding-challenges var blevet medregnet. Et tidligere screenshot viste 17/186 på et tidligere tidspunkt.
 
 | Sværhedsgrad | Løst | Total |
 | --- | ---: | ---: |
 | 1 stjerne | 8 | 27 |
 | 2 stjerner | 2 | 29 |
-| 3 stjerner | 5 | 51 |
-| 4 stjerner | 2 | 40 |
-| 5 stjerner | 1 | 25 |
+| 3 stjerner | 9 | 51 |
+| 4 stjerner | 4 | 40 |
+| 5 stjerner | 3 | 25 |
 | 6 stjerner | 0 | 14 |
-| **I alt** | **18** | **186** |
+| **I alt** | **26** | **186** |
 
-### Bekræftede løste hacking-challenges
+### Bekræftede løste hacking-challenges (14)
 
 | Challenge | Stjerner | Juice Shop-kategori | Metode og begrænsning |
 | --- | ---: | --- | --- |
 | Bjoern's Favorite Pet | 3 | Broken Authentication | OSINT om Zaya og password reset |
 | Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
 | Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
-| **Login Jim** | **3** | **Injection** | **Login lykkedes efter password-reset via OSINT; ingen SQL-injection afprøvet i HTTP-requesten. Den relaterede coding challenge blev særskilt løst ved at identificere og rette SQL-injection-sårbar kode.** |
+| **Login Jim** | **3** | **Injection** | **Løst via almindeligt login efter OSINT-baseret password reset. Ingen SQL Injection blev udnyttet ved dette login.** |
 | Privacy Policy | 1 | Miscellaneous | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
 | Repetitive Registration | 1 | Improper Input Validation | Løst ifølge eksport; præcis fremgangsmåde ikke noteret |
 | Reset Jim's Password | 3 | Broken Authentication | Star Trek-spor → Samuel |
-| Reset Morty's Password | 5 | Broken Anti Automation | Obfuskeret svar: `5N0wb41L`; ingen særskilt rate-limit-bypass påvist |
+| Reset Morty's Password | 5 | Broken Anti Automation | OSINT om Snowball og svaret `5N0wb41L`; ingen rate-limit-bypass afprøvet i password-reset-forløbet |
 | Score Board | 1 | Miscellaneous | Åbnet via link fra appen |
 | Security Policy | 2 | Miscellaneous | `/security.txt` åbnet og læst |
 | Steganography | 4 | Security through Obscurity | OpenStego på `5.png`, identificerede Pickle Rick |
@@ -72,13 +88,20 @@ Juice Shop-eksporten `owasp_juice_shop-2026-10-28.json` indeholder kodede status
 | Reset Uvogin's Password | 4 | Sensitive Data Exposure | OSINT om yndlingsfilm |
 | Mass Dispel | 1 | Miscellaneous | Shift + klik på X |
 
-**Vigtig skelnen:** Juice Shops kategorier beskriver *den tilsigtede* sårbarhed for en challenge, men ikke nødvendigvis den metode, der udløste løsningsmarkeringen. Eksempelvis blev **Login Jim** registreret som løst efter password-reset og almindeligt login. Dette er **ikke dokumentation for et udført SQL Injection-angreb**. Separat blev **Login Jims coding challenge** løst med kodeanalyse og fejlrettelse af en usikker SQL-forespørgsel.
+### Bekræftede coding challenges (6 × Find It + Fix It)
 
-### Coding challenges
+| Coding challenge | Find It | Fix It | Hvad vi konkret har noteret |
+| --- | :---: | :---: | --- |
+| Bjoern's Favorite Pet | ✓ | ✓ | Sikrere password reset med tidsbegrænset engangslink |
+| Login Jim | ✓ | ✓ | SQL-streng med direkte brugerinput identificeret; sikker rettelse valgt i kodeøvelsen |
+| Reset Jim's Password | ✓ | ✓ | Gennemført ifølge eksport; ikke detaljeret dokumenteret |
+| Reset Morty's Password | ✓ | ✓ | Usikker `X-Forwarded-For`-baseret rate-limit-nøgle; Fix 2 fjerner den brugerdefinerede `keyGenerator` |
+| Score Board | ✓ | ✓ | Gennemført ifølge eksport; ikke detaljeret dokumenteret |
+| Reset Uvogin's Password | ✓ | ✓ | Gennemført ifølge eksport; ikke detaljeret dokumenteret |
 
-**Login Jims coding challenge er gennemført:** Sårbarheden blev fundet i login-funktionens SQL-konstruktion (linje 15 i det viste kodeudsnit), hvor brugerinput indgår direkte i en SQL-streng. Der blev derefter valgt en rettelse i Juice Shops *Find It/Fix It*-interface. En sikker implementering bruger parameteriserede forespørgsler i stedet for at sammenkæde SQL og brugerinput. Dette er kodeanalyse og fejlrettelse – **ikke** en test, hvor SQL Injection blev udnyttet til login. Bjoerns relaterede coding challenge blev også løst, med en sikrere reset-løsning baseret på et kortlivet engangslink. Eksporten angiver fire gennemførte coding-dele (to Find It og to Fix It).
+**Vigtigt:** `Find It` og `Fix It` er Juice Shops interaktive kodeøvelser. At vælge en korrekt rettelse her betyder **ikke**, at kildekoden i den kørende Docker-container er blevet ændret. Og en challenge kan blive løst ved en anden metode end den tilsigtede. Jims login blev for eksempel løst med en adgangskode efter reset, selv om den tilsigtede kategori er *Injection*; SQL Injection blev kun behandlet særskilt i kodeøvelsen.
 
-Den rå eksport indeholder `continueCode`-felter til gendannelse af progression. Disse er ikke gengivet i et offentligt repository.
+De rå `continueCode`-værdier er ikke medtaget i det offentlige repository.
 ---
 
 ## Sikkerhedsfund 1 – Usikre sikkerhedsspørgsmål / Broken Authentication
@@ -311,8 +334,8 @@ Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel 
 - [x] Flere OSINT- og forensics-øvelser gennemført.
 - [ ] Gennemgå den faktiske kildekode og angiv konkrete filer/linjer for de tre hovedfund.
 - [ ] Tilføj **redigerede** screenshots af PoC, HTTP-responses og badges.
-- [x] Udfyld navnene på de 14 løste hacking-challenges ud fra Juice Shop-eksporten.
-- [ ] Forbered 10–15 minutters præsentation ud fra de tre fund og ét forensics-eksempel.
+- [x] Udfyld de 14 hacking-challenges og seks fuldførte coding challenges ud fra Juice Shop-eksporten.
+- [x] Lav præsentationsguide til 10–15 minutter med de tre fund; selve fremlæggelsen er ikke afholdt.
 - [ ] Valgfri patch eller regressionstest er **ikke** implementeret.
 
 **Dokumentationshygiejne:** Før screenshots, HAR-filer eller netværkslogs lægges i et offentligt repository, skal de kontrolleres for `Authorization: Bearer`-tokens, cookies, session-ID'er og andre hemmeligheder. Ingen rå autentifikationsdata er medtaget her.
