@@ -15,7 +15,7 @@ README'en kan bruges direkte som præsentation **uden live-demo**. Foreslået r�
 
 1. **Introduktion (1 min):** Hvorfor OWASP Juice Shop, og hvordan VM/Docker/SSH-tunnel er sat op.
 2. **Arbejdsmetode (1 min):** Browser, DevTools, OSINT og `curl`; se den konkrete HTTP-kommunikation.
-3. **Fund 1 (3 min):** Usikre sikkerhedsspørgsmål, fx Jims Star Trek-spor → `Samuel` → password reset.
+3. **Fund 1 (3 min):** Usikre sikkerhedsspørgsmål, fx OSINT om Jims Star Trek-reference → `Samuel` → **Forgot Password**-reset; Mortys hund **Snuffles/Snowball** og leetspeak som andet eksempel.
 4. **Fund 2 (2 min):** Tom brugerregistrering; vis `curl`-requesten og `HTTP/1.1 201 Created`.
 5. **Fund 3 (2 min):** Adresse-sletning → `HTTP 500`, SQLite/Sequelize-fejl og interne stier.
 6. **Andre erfaringer (1–2 min):** Steganografi, coding-challenges, forskel på challenge-status og faktisk udnyttet sårbarhed.
@@ -79,13 +79,13 @@ Eksporten `owasp_juice_shop-2026-10-30.json` er sammenholdt med de to tidligere 
 | **Login Jim** | **3** | **Injection** | **Løst via almindeligt login efter OSINT-baseret password reset. Ingen SQL Injection blev udnyttet ved dette login.** |
 | Privacy Policy | 1 | Miscellaneous | Åbnede **Account → Privacy & Security → Privacy Policy**, rute `/#/privacy-security/privacy-policy` |
 | Repetitive Registration | 1 | Improper Input Validation | Blev løst med samme `curl`-request som Empty User Registration: `passwordRepeat` var udeladt |
-| Reset Jim's Password | 3 | Broken Authentication | Star Trek-spor → Samuel |
-| Reset Morty's Password | 5 | Broken Anti Automation | OSINT om Snowball og svaret `5N0wb41L`; ingen rate-limit-bypass afprøvet i password-reset-forløbet |
-| Score Board | 1 | Miscellaneous | Åbnet via link fra appen |
+| Reset Jim's Password | 3 | Broken Authentication | OSINT: Jims Starfleet-kommentar → James T. Kirk → broderens mellemnavn `Samuel`; brugt på **Forgot Password**-siden til at nulstille adgangskoden |
+| Reset Morty's Password | 5 | Broken Anti Automation | OSINT om Morty Smiths hund **Snuffles**, kaldet **Snowball** i et afsnit; navnet blev skrevet i 1337/leetspeak som `5N0wb41L` og brugt på **Forgot Password**-siden. Ingen rate-limit-bypass afprøvet |
+| Score Board | 1 | Miscellaneous | Åbnede et link til Score Board, som Juice Shop viste **under Bjoern's Favorite Pet-coding challenge**; ingen selvstændig søgning efter den skjulte rute |
 | Security Policy | 2 | Miscellaneous | `/security.txt` åbnet og læst |
-| Steganography | 4 | Security through Obscurity | OpenStego på `5.png`, identificerede Pickle Rick |
+| Steganography | 4 | Security through Obscurity | Skjult billede udtrukket med OpenStego fra `5.png`; forsøgte reverse image lookup (TinEye: 0 resultater), derefter identificerede **Google AI** figuren som **Pickle Rick** |
 | Missing Encoding | 1 | Improper Input Validation | Kodede `#` i billede-URL som `%23` |
-| Reset Uvogin's Password | 4 | Sensitive Data Exposure | OSINT om yndlingsfilm |
+| Reset Uvogin's Password | 4 | Sensitive Data Exposure | OSINT med **Google-søgning** efter Uvogins yndlingsfilm → *The Silence of the Lambs*, brugt på Forgot Password-siden |
 | Mass Dispel | 1 | Miscellaneous | Shift + klik på X |
 
 ### Bekræftede coding challenges (6 × Find It + Fix It)
@@ -116,9 +116,9 @@ Jeg gennemgik offentlige produktanmeldelser i Juice Shop og koblede brugernes op
 | Konto | Ledetråd / research | Svar anvendt |
 | --- | --- | --- |
 | `bjoern@owasp.org` | Offentligt omtalt kæledyr | `Zaya` |
-| `jim@juice-sh.op` | Starfleet-uniform → James T. Kirk → bror George Samuel Kirk | `Samuel` |
-| `uvogin@juice-sh.op` | Filmoplysninger fundet gennem OSINT | `Silence of the Lambs` |
-| `morty@juice-sh.op` | Karakteren Morty Smiths hund Snuffles/Snowball | Obfuskeret `5N0wb41L` |
+| `jim@juice-sh.op` | OSINT fra Jims kommentar om Starfleet-uniform → James T. Kirk → bror George Samuel Kirk; svaret indtastet på Forgot Password-siden | `Samuel` |
+| `uvogin@juice-sh.op` | Google-søgning/OSINT efter kontoens yndlingsfilm; brugt på Forgot Password-siden | `Silence of the Lambs` |
+| `morty@juice-sh.op` | OSINT om Mortys hund **Snuffles**, som kalder sig **Snowball** i et afsnit; Snowball blev obfuskeret med 1337/leetspeak og indtastet på Forgot Password-siden | `5N0wb41L` |
 
 Juice Shop viste succesmeddelelser for de gennemførte nulstillinger, herunder:
 
@@ -299,14 +299,14 @@ Arbejdsgang:
    `http://127.0.0.1:3000/assets/public/images/carousel/5.png`.
 4. Anvendte **OpenStego → Extract hidden data** uden password.
 5. Det udtrukne pixel-art-billede viste en grøn figur i et mekanisk skelet.
-6. TinEye gav **0 matches**. Billedgenkendelse med AI identificerede figuren som **Pickle Rick** fra *Rick and Morty*.
+6. Forsøgte **reverse image lookup via TinEye**, som gav **0 matches**. Derefter blev det samme billede sendt til **Google AI** til visuel identifikation, og Google AI identificerede figuren som **Pickle Rick** fra *Rick and Morty*. Identifikationen var altså **ikke** et match fra TinEye.
 7. Navnet blev indsendt via `Contact Us`, hvilket løste `Steganography`-challengen.
 
 **Læring:** Udtræk af skjult information og fortolkning af indholdet er to separate analysetrin. Man kan bruge billedanalyse, når motivet ikke er genkendeligt ud fra egen baggrundsviden.
 
 ### Andre challenges og observationer
 
-- **Score Board:** Siden blev åbnet via et link fra Juice Shop efter gennemført coding challenge. Det viste, at appens egen navigation kan afsløre ellers skjulte routes.
+- **Score Board:** Under arbejdet med **Bjoern's Favorite Pet-coding challenge** viste Juice Shop selv et link til Score Board. Jeg trykkede på det, og udfordringen blev dermed løst uden selv at lede efter den skjulte rute.
 - **Mass Dispel:** `Shift + klik` på et X lukker alle grønne challenge-notifikationer. Den handling udløste en særskilt *Good Practice*-challenge.
 - **Repetitive Registration:** Blev løst med samme `curl`-request som Empty User Registration, idet `passwordRepeat` blev udeladt.
 - **Juicy the Smart Assistant:** Chatbotten oplyste, at AI-endpointet ikke var konfigureret eller tilgængeligt i denne installation. Det er ikke dokumenteret som en sikkerhedssårbarhed.
