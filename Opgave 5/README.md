@@ -1,7 +1,7 @@
 # Opgave 5 – OWASP Juice Shop
 
 **Specialisterne Academy · 30. oktober 2026 (seneste statuskontrol)**  
-**Status:** Seneste JSON-eksport fra 30. oktober 2026 viser **26/186 deludfordringer** (**14 hacking-challenges + 6 Find It + 6 Fix It**). **Product Tampering** blev løst efter eksporten; ny samlet total er endnu ikke verificeret. Tidligere optælling på 18 var ufuldstændig.
+**Status:** Nyeste JSON-eksport fra 30. oktober 2026 viser **35/186** (**17 hacking-challenges + 9 Find It + 9 Fix It**).
 
 ## Formål
 
@@ -55,53 +55,57 @@ Derefter blev `http://127.0.0.1:3000` åbnet lokalt. Denne fremgangsmåde kræve
 
 ## Resultat og status
 
-Eksporten `owasp_juice_shop-2026-10-30.json` er sammenholdt med de to tidligere JSON-eksporter. De tre progressionskoder er identiske med eksporten fra 28. oktober (anden eksport). Koderne er afkodet med de salte/Hashids-parametre, som Juice Shops egen kode bruger, og ID'erne er sammenholdt med den officielle challenge-liste.
-
-**Status: 26/186 løste deludfordringer**, fordelt på **14 hacking-challenges** og **12 coding-dele**: seks `Find It` og seks `Fix It`. Den tidligere README angav 18/186, fordi kun to af de seks coding-challenges var blevet medregnet. Et tidligere screenshot viste 17/186 på et tidligere tidspunkt.
+Seneste backup **`owasp_juice_shop-2026-10-30(1).json`** er afkodet med Juice Shops egne Hashids-salte og ID-liste. Den viser **35/186 løste deludfordringer:** **17 hacking-challenges** samt **9 Find It + 9 Fix It**. Dette er ni deludfordringer flere end eksporten tidligere samme dag (26/186). Denne status er baseret på eksportens indhold, ikke på et nyt Score Board-screenshot.
 
 | Sværhedsgrad | Løst | Total |
 | --- | ---: | ---: |
 | 1 stjerne | 8 | 27 |
 | 2 stjerner | 2 | 29 |
-| 3 stjerner | 9 | 51 |
-| 4 stjerner | 4 | 40 |
+| 3 stjerner | 15 | 51 |
+| 4 stjerner | 7 | 40 |
 | 5 stjerner | 3 | 25 |
 | 6 stjerner | 0 | 14 |
-| **I alt** | **26** | **186** |
+| **I alt** | **35** | **186** |
 
-### Bekræftede løste hacking-challenges (14)
+### Bekræftede løste hacking-challenges (17)
 
 | Challenge | Stjerner | Juice Shop-kategori | Metode og begrænsning |
 | --- | ---: | --- | --- |
 | Bjoern's Favorite Pet | 3 | Broken Authentication | OSINT om Zaya og password reset |
 | Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
 | Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
-| **Login Jim** | **3** | **Injection** | **Blev først opdaget efter Reset Jim's Password. Løst ved almindeligt login med den netop ændrede adgangskode; ingen SQL Injection blev brugt.** |
-| Privacy Policy | 1 | Miscellaneous | Åbnede **Account → Privacy & Security → Privacy Policy**, rute `/#/privacy-security/privacy-policy` |
-| Repetitive Registration | 1 | Improper Input Validation | Blev løst med samme `curl`-request som Empty User Registration: `passwordRepeat` var udeladt |
-| Reset Jim's Password | 3 | Broken Authentication | OSINT: Jims Starfleet-kommentar → James T. Kirk → broderens mellemnavn `Samuel`; brugt på **Forgot Password**-siden til at nulstille adgangskoden |
-| Reset Morty's Password | 5 | Broken Anti Automation | OSINT om Morty Smiths hund **Snuffles**, kaldet **Snowball** i et afsnit; navnet blev skrevet i 1337/leetspeak som `5N0wb41L` og brugt på **Forgot Password**-siden. Ingen rate-limit-bypass afprøvet |
-| Score Board | 1 | Miscellaneous | Juice Shop viste selv et link **under Bjoern's Favorite Pet-coding challenge**; jeg kendte ikke Score Board på forhånd og trykkede blot på linket |
-| Security Policy | 2 | Miscellaneous | `/security.txt` åbnet og læst |
-| Steganography | 4 | Security through Obscurity | Skjult billede udtrukket med OpenStego fra `5.png`; forsøgte reverse image lookup (TinEye: 0 resultater), derefter identificerede **Google AI** figuren som **Pickle Rick** |
-| Missing Encoding | 1 | Improper Input Validation | Kodede `#` i billede-URL som `%23` |
-| Reset Uvogin's Password | 4 | Sensitive Data Exposure | OSINT med **Google-søgning** efter Uvogins yndlingsfilm → *The Silence of the Lambs*, brugt på Forgot Password-siden |
+| **Login Bender** | **3** | **Injection** | Registreret som løst efter arbejde med Benders password-reset og konto; ingen SQL Injection mod login dokumenteret |
+| **Login Jim** | **3** | **Injection** | Opdaget efter Reset Jim's Password; normalt login med den nye adgangskode, ikke SQL Injection |
+| Privacy Policy | 1 | Miscellaneous | Account → Privacy & Security → Privacy Policy |
+| **Product Tampering** | **3** | **Broken Access Control** | Anonym `PUT /api/Products/9` ændrede den gemte produktbeskrivelse, HTTP 200; særskilt PoC nedenfor |
+| Repetitive Registration | 1 | Improper Input Validation | Løst med samme `curl` som Empty User Registration; `passwordRepeat` udeladt |
+| **Reset Bender's Password** | **4** | **Broken Authentication** | OSINT om Futurama-Benders arbejde med stålbjælker til Stop'n'Drop; anvendt ved Forgotten Password |
+| Reset Jim's Password | 3 | Broken Authentication | Starfleet-kommentar → James T. Kirk → broderens mellemnavn `Samuel` |
+| Reset Morty's Password | 5 | Broken Anti Automation | Mortys hund Snuffles/Snowball → leetspeak `5N0wb41L`; ingen rate-limit-bypass påvist |
+| Score Board | 1 | Miscellaneous | Åbnede link vist under Bjoerns coding challenge, ikke selvstændig discovery |
+| Security Policy | 2 | Miscellaneous | `/security.txt` |
+| Steganography | 4 | Security through Obscurity | OpenStego på `5.png`; TinEye 0 matches; Google AI identificerede Pickle Rick |
+| Missing Encoding | 1 | Improper Input Validation | `#` i Photo Wall-URL erstattet med `%23` |
+| Reset Uvogin's Password | 4 | Sensitive Data Exposure | Google OSINT → *The Silence of the Lambs* |
 | Mass Dispel | 1 | Miscellaneous | Shift + klik på X |
 
-### Bekræftede coding challenges (6 × Find It + Fix It)
+### Bekræftede coding challenges (9 × Find It + Fix It)
 
-| Coding challenge | Find It | Fix It | Hvad vi konkret har noteret |
+| Coding challenge | Find It | Fix It | Dokumenteret metode |
 | --- | :---: | :---: | --- |
-| Bjoern's Favorite Pet | ✓ | ✓ | Sikrere password reset med tidsbegrænset engangslink |
-| Login Jim | ✓ | ✓ | SQL-streng med direkte brugerinput identificeret; sikker rettelse valgt i kodeøvelsen |
-| Reset Jim's Password | ✓ | ✓ | Gennemført ifølge eksport; ikke detaljeret dokumenteret |
-| Reset Morty's Password | ✓ | ✓ | Usikker `X-Forwarded-For`-baseret rate-limit-nøgle; Fix 2 fjerner den brugerdefinerede `keyGenerator` |
-| Score Board | ✓ | ✓ | Gennemført ifølge eksport; ikke detaljeret dokumenteret |
-| Reset Uvogin's Password | ✓ | ✓ | Gennemført ifølge eksport; ikke detaljeret dokumenteret |
+| Bjoern's Favorite Pet | ✓ | ✓ | Sikkert password reset med engangslink |
+| **Login Bender** | ✓ | ✓ | Løst ifølge eksport; præcis kodeændring ikke dokumenteret |
+| Login Jim | ✓ | ✓ | SQL Injection i strengkonkateneret loginquery fundet og rettelse valgt |
+| **Product Tampering** | ✓ | ✓ | Løst ifølge eksport; manglende PUT-adgangskontrol analyseret nedenfor |
+| **Reset Bender's Password** | ✓ | ✓ | Løst ifølge eksport; præcis kodeændring ikke dokumenteret |
+| Reset Jim's Password | ✓ | ✓ | Løst ifølge eksport; detaljer ikke dokumenteret |
+| Reset Morty's Password | ✓ | ✓ | Usikker `X-Forwarded-For`-`keyGenerator` fjernet med Fix 2 |
+| Score Board | ✓ | ✓ | Løst ifølge eksport; detaljer ikke dokumenteret |
+| Reset Uvogin's Password | ✓ | ✓ | Løst ifølge eksport; detaljer ikke dokumenteret |
 
-**Vigtigt:** `Find It` og `Fix It` er Juice Shops interaktive kodeøvelser. At vælge en korrekt rettelse her betyder **ikke**, at kildekoden i den kørende Docker-container er blevet ændret. Og en challenge kan blive løst ved en anden metode end den tilsigtede. Jims login blev for eksempel løst med en adgangskode efter reset, selv om den tilsigtede kategori er *Injection*; SQL Injection blev kun behandlet særskilt i kodeøvelsen.
+**Vigtig afgrænsning:** Juice Shops kategorier angiver tilsigtede sårbarheder, men ikke nødvendigvis min faktiske løsningsmetode. Fx blev Login Jim løst ved almindeligt login efter password reset, ikke med SQL Injection. `Find It` og `Fix It` er interaktive kodeøvelser; de ændrer **ikke** koden i Docker-containeren.
 
-De rå `continueCode`-værdier er ikke medtaget i det offentlige repository.
+De rå `continueCode`-værdier er udeladt af det offentlige repository.
 ---
 
 ## Sikkerhedsfund 1 – Usikre sikkerhedsspørgsmål / Broken Authentication
@@ -288,7 +292,15 @@ Serverens JSON indeholdt `"status":"success"`, `"id":9`, den nye `description` o
 
 Serverens API accepterede en skriveoperation, som ændrede et produkts gemte indhold, fra en **ikke-autentificeret klient**. Forskellen fra den oprindelige DevTools-ændring er, at en API-`PUT` ændrer tilstanden på serveren og dermed påvirker andre brugere. Det kan misbruges til manipulation af indhold, eksempelvis til at indsætte uønskede links.
 
-Den viste kildekode i Juice Shop har ikke tilstrækkelig beskyttelse af `PUT /api/Products/:id`; en kommenteret autorisationsregel i `server.ts` illustrerer den manglende adgangskontrol. Den sårbare endpoint-adfærd er direkte verificeret med `HTTP 200` og den ændrede produktbeskrivelse.
+**Hvorfor er den udkommenterede linje sårbar?** I Juice Shops `server.ts` opretter biblioteket **`finale-rest`** automatisk CRUD-ruter for databasen (blandt andet `/api/Products/:id`). Ovenover står denne middleware, som skulle have beskyttet en allerede eksisterende PUT-rute:
+
+```typescript
+// app.put('/api/Products/:id', security.isAuthorized())
+```
+
+Fordi linjen begynder med `//`, **registreres adgangskontrollen ikke**. Det betyder ikke, at PUT-ruten er deaktiveret – den automatisk genererede API-rute virker stadig. Derfor kunne en anonym klient opdatere produktet. **Sårbarheden er ikke en kommentar i sig selv, men den aktive skrivefunktion uden nødvendig autorisation.** At fjerne `//` ville kræve autentifikation med `security.isAuthorized()`, men en robust produktionsrettelse bør også kræve den korrekte rolle (fx admin), ikke blot at en bruger er logget ind.
+
+Den sårbare adfærd er direkte verificeret med `HTTP 200` og den ændrede produktbeskrivelse.
 
 **Afhjælpning:** Kræv autentifikation og eksplicit server-side autorisation for produktændringer; begræns skriveadgang til relevante administrative roller, og tilføj regressionstests, hvor en anonym `PUT` skal afvises (fx `401 Unauthorized` eller `403 Forbidden`). Desuden bør administrative ændringer logges.
 
@@ -391,7 +403,7 @@ Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel 
 - [x] Flere OSINT- og forensics-øvelser gennemført.
 - [ ] Gennemgå den faktiske kildekode og angiv konkrete filer/linjer for de tre hovedfund.
 - [ ] Tilføj **redigerede** screenshots af PoC, HTTP-responses og badges.
-- [x] Udfyld de 14 hacking-challenges og seks fuldførte coding challenges ud fra Juice Shop-eksporten.
+- [x] Udfyld de 17 hacking-challenges og ni fuldførte coding challenges ud fra den nyeste Juice Shop-eksport.
 - [x] Lav præsentationsguide til 10–15 minutter med de tre fund; selve fremlæggelsen er ikke afholdt.
 - [ ] Valgfri patch eller regressionstest er **ikke** implementeret.
 
