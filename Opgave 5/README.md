@@ -332,6 +332,31 @@ models.sequelize.query(`SELECT * FROM Products WHERE ((name LIKE '%${criteria}%'
 
 Det er sårbart, fordi brugerinput indsættes i SQL **uden parameterbinding**. Test med en apostrof kan afsløre syntaksfejl; det næste trin var at lukke den oprindelige tekststreng og parenteserne og kommentere resten ud med `--`.
 
+### Hvorfor passer netop disse tegn ind i serverens SQL?
+
+Søgefeltet `q` bliver indsat **mellem apostroffer** i et `LIKE '%...%'`-udtryk. En almindelig søgning efter `apple` bliver til:
+
+```sql
+SELECT *
+FROM Products
+WHERE ((name LIKE '%apple%' OR description LIKE '%apple%') AND deletedAt IS NULL)
+ORDER BY name
+```
+
+I SQL Injection er målet at ændre SQL'ens **struktur**, ikke blot søge efter en mærkelig tekst. Den fungerende payload begynder med `'))`:
+
+| Payload-del | Hvad den gør |
+| --- | --- |
+| `'` | Lukker tekststrengen i `LIKE`. |
+| `))` | Lukker de parenteser, der omslutter udtrykket. |
+| `UNION SELECT` | Kombinerer det eksisterende produktsvar med rækker fra en anden tabel. |
+| `1,2,3,...,10` | Giver den ekstra SELECT samme antal kolonner som den oprindelige produkt-SELECT. |
+| `-- ` | Gør resten af den oprindelige SQL til en kommentar. |
+
+Det er derfor, den første idé `AND SELECT * FROM sqlite_master` fejlede: **`AND` kræver en betingelse**, mens `UNION` kombinerer resultatsæt. Og `SELECT *` fra `sqlite_master` passer ikke automatisk med produktforespørgslens 10 kolonner.
+
+**Læringspunkt:** En SQLi-payload skal passe syntaktisk ind i den SQL, serveren allerede har bygget. Det er også derfor, en enkelt apostrof og de efterfølgende fejlbeskeder kan hjælpe med at forstå injektionspunktet.
+
 ### PoC 1 – udtræk af databaseskema
 
 Mit første forsøg brugte fejlagtigt `AND SELECT * FROM sqlite_master`. `AND` kræver en logisk betingelse, og `SELECT *` fra `sqlite_master` matcher ikke de 10 kolonner fra `Products`. Jeg korrigerede det til **`UNION SELECT` med 10 kolonner**:
@@ -353,6 +378,12 @@ CREATE TABLE `Users` (
 ```
 
 Juice Shop viste: **Database Schema – solved**.
+
+### Hvorfor ender databaseskemaet under `price`?
+
+`UNION` matcher kolonner **efter placering**, ikke efter deres navne. Ved `UNION SELECT 1,2,3,sql,5,6,7,8,9,10 FROM sqlite_master` placeres `sqlite_master.sql` derfor i kolonne **4**. I API'ets JSON repræsenterer kolonne 4 normalt produktets `price`, så en `CREATE TABLE`-tekst dukker op som en pris.
+
+Det gør også resultatet til mere end en fejlbesked: Serveren returnerer faktisk data fra en tabel, som produkt-API'et ikke skulle give adgang til. `sqlite_master` afslørede blandt andet, at tabellen `Users` indeholder `id`, `email` og `password`. Først **derefter** kunne brugerforespørgslen udformes på et kendt grundlag.
 
 ### PoC 2 – bruger-e-mails og password-hashes
 
@@ -381,6 +412,21 @@ Eksempel fra den lokale lab (hash **bevidst udeladt fra det offentlige repositor
 
 Juice Shop viste: **User Credentials – solved**. Her blev SQL Injection faktisk **udnyttet til at læse data fra en anden tabel** – i modsætning til tidligere `Login Jim` og `Login Bender`, hvor de løste login-challenges ikke dokumenterer en SQL Injection.
 
+### Sådan læses det faktiske HTTP-svar
+
+`curl -sG` sender en GET-request; `--data-urlencode` koder SQL-tegn som apostrof og mellemrum korrekt i `q`-parameteren; `python3 -m json.tool` formaterer JSON. I det faktiske svar fra `Users` kom der **25 brugerrækker** blandet med de almindelige produktresultater.
+
+| JSON-nøgle i produktresultatet | Kolonne fra `Users` |
+| --- | --- |
+| `id` | `id` |
+| `name` | `email` |
+| `description` | `password` (32-tegns MD5-hash) |
+| `price`, `deluxePrice`, m.fl. | Konstante pladsholdere fra payloaden |
+
+Hashene er ikke adgangskoder i klartekst, men stadig fortrolige oplysninger, som et offentligt produkt-API ikke bør returnere. **HTTP 200 / `"status":"success"` kan altså godt være tegn på et vellykket angreb**, selvom applikationen ikke viser en fejl.
+
+Det skelner sig fra de tidligere `Login Jim` og `Login Bender`-challenges: De er registreret løst, men der blev ikke dokumenteret SQL Injection ved de logins. **Database Schema og User Credentials er derimod dokumenteret reel SQL Injection.**
+
 ### Hvorfor er det en sårbarhed, og hvordan afhjælpes den?
 
 Et offentligt søgeendpoint kan læse tabeller, som brugere slet ikke burde have adgang til. `UNION SELECT` kombinerer resultater fra en anden tabel med produktresultatet, når kolonneantallet matcher. Databasen returnerer værdierne, og API'et serialiserer dem som produktfelter. **HTTP 200 og de faktisk returnerede brugerrækker** dokumenterer fortrolighedsbruddet i undervisningsmiljøet.
@@ -390,6 +436,99 @@ Et offentligt søgeendpoint kan læse tabeller, som brugere slet ikke burde have
 **SOC-relevans:** Korreler HTTP-accesslogs, afvigende statuskoder, gentagne søgekald og store JSON-svar. Brug en lokal, anonymiseret PoC til demonstration og undgå at offentliggøre et komplet password-hash-udtræk.
 
 **Kildekode:** [OWASP Juice Shop: routes/search.ts](https://github.com/juice-shop/juice-shop/blob/master/routes/search.ts).
+
+---
+
+## Undersøgelse 6 – Admin Registration / Mass Assignment (endnu ikke testet)
+
+**Officielt challenge-navn:** Admin Registration · **3 stjerner**  
+**Officiel Juice Shop-kategori:** Improper Input Validation  
+**Sårbarhedstype:** Mass Assignment / manglende server-side kontrol af rettighedsfelter  
+**Status:** **Ikke dokumenteret udført eller løst.** Der er ingen succesnotifikation eller HTTP-response fra min egen registrering endnu. Tæller ikke med i status **37/186**.
+
+### 1. Hvorfor `UNION INSERT INTO` ikke virker
+
+Efter SQL Injection mod `Users` overvejede jeg at oprette min egen administratorkonto med en `UNION INSERT INTO`-forespørgsel. Her er det vigtigt at skille **læsning** fra **skrivning**:
+
+```sql
+-- Læser rækker fra to SELECT-forespørgsler og kombinerer dem:
+SELECT id, email FROM Users
+UNION
+SELECT id, email FROM OtherTable;
+
+-- Skriver en ny række i en tabel:
+INSERT INTO Users (username, email, role)
+VALUES ('Axel', 'a@a.dk', 'admin');
+```
+
+`UNION INSERT` er ikke gyldig SQL. `UNION` kombinerer **SELECT-resultater**, mens `INSERT` er en selvstændig skriveoperation. At jeg kunne læse `Users` gennem en sårbar produktsøgning betyder **ikke**, at jeg automatisk kan indsætte en bruger gennem den samme søgefunktion.
+
+Juice Shop har imidlertid en **anden sårbarhed** i registrerings-API'et, så SQL Injection er slet ikke nødvendig til denne challenge.
+
+### 2. Hvordan registrering og roller burde fungere
+
+En almindelig registrering sender eksempelvis:
+
+```http
+POST /api/Users/
+Content-Type: application/json
+
+{"email":"ny@eksempel.test","password":"Test1234!","passwordRepeat":"Test1234!"}
+```
+
+I en sikker implementering bestemmer **serveren** rettighederne for en selvregistreret bruger, typisk `role = 'customer'`. Brugeren må ikke selv vælge `admin`.
+
+I Juice Shops faktiske kildekode (`models/user.ts`) har `role` standardværdien `customer`, men modellen accepterer blandt andet `customer`, `deluxe`, `accounting` og **`admin`**. Det er legitimt, at modellen kan repræsentere en administrator; fejlen opstår, hvis en **offentlig registreringsrequest** får lov til at vælge den rolle.
+
+### 3. Mass Assignment – klienten tilføjer et ekstra felt
+
+HTML-formularen viser ikke nødvendigvis alle egenskaber i serverens brugermodel. Hvis API'et blindt overfører JSON-felter fra requesten til modellen, kan brugeren selv tilføje `role`, selvom feltet ikke findes i formularen:
+
+```json
+{
+  "username": "Axel",
+  "email": "a@a.dk",
+  "password": "Test1234!",
+  "passwordRepeat": "Test1234!",
+  "role": "admin"
+}
+```
+
+Det kaldes **Mass Assignment**. Feltet er ikke SQL-kode; det er almindelig JSON, som serveren ikke burde stole på til tildeling af rettigheder. I `routes/verify.ts` tjekker selve challenge-logikken `req.body.role === security.roles.admin`. Det forklarer, hvorfor netop dette felt er centralt.
+
+**Vigtigt:** Juice Shop kan markere en challenge ud fra requestens indhold. En grøn notifikation er derfor ikke alene bevis på, at den nye konto **faktisk** blev gemt som admin. HTTP-svaret og den resulterende brugerrolle skal også undersøges.
+
+### 4. Planlagt test (ikke gennemført endnu)
+
+```bash
+curl -i -X POST http://127.0.0.1:3000/api/Users/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "Axel",
+    "email": "a@a.dk",
+    "password": "Test1234!",
+    "passwordRepeat": "Test1234!",
+    "role": "admin"
+  }'
+```
+
+Ved afprøvning skal jeg kontrollere **HTTP-status** (forventeligt `201 Created`, hvis registreringen lykkes), returneret `role`, eventuel **Admin Registration**-notifikation og om kontoen faktisk kan logge ind. En allerede brugt e-mailadresse kan udløse en unikhedsfejl. **Ingen af disse udfald er endnu observeret i mit eget lab.**
+
+### 5. Sammenligning af tre angrebstyper
+
+| Teknik | HTTP-metode og endpoint | Problem | Status |
+| --- | --- | --- | --- |
+| SQL Injection | `GET /rest/products/search?q=...` | Brugerinput bliver SQL-kode og lækker andre tabellers data. | **Bekræftet** |
+| Product Tampering | `PUT /api/Products/9` | Produktændring accepteres uden krævet adgangskontrol. | **Bekræftet** |
+| Admin Registration | `POST /api/Users/` | Klienten kan forsøge at tildele sig selv rollen `admin` gennem et ekstra JSON-felt. | **Planlagt test** |
+
+### 6. Hvordan forhindres det?
+
+Brug en **allowlist af tilladte felter** for almindelig registrering (f.eks. e-mail og password). Ignorér/afvis `role` fra offentlige requests, tildel selv `customer` på serveren og beskyt alle rolleændringer med autentifikation og autorisation. At `admin` er en *gyldig* rolle i databasemodellen betyder **ikke**, at enhver klient har ret til at vælge den.
+
+**SOC-vinkel:** Registreringer, der indeholder uventede rollefelter, nyoprettede konti med administrative privilegier og efterfølgende administrative logins er relevante hændelser at undersøge og korrelere.
+
+**Kilder:** [Juice Shop – models/user.ts](https://github.com/juice-shop/juice-shop/blob/master/models/user.ts), [routes/verify.ts](https://github.com/juice-shop/juice-shop/blob/master/routes/verify.ts), [server.ts](https://github.com/juice-shop/juice-shop/blob/master/server.ts).
 
 ---
 
@@ -465,6 +604,7 @@ Arbejdsgang:
 
 | Prioritet | Fund | Forslag | Verifikation |
 | --- | --- | --- | --- |
+| P1 (potentiel) | Admin Registration / Mass Assignment | Kun tilladte JSON-felter ved registrering; serveren fastsætter rollen | `role: admin` i klientdata bliver afvist eller ignoreret |
 | P1 | SQL Injection – produktsøgning | Parameteriseret SQL og mindst mulige DB-rettigheder | SQL-specialtegn behandles som data; `UNION SELECT` kan ikke hente tabeller |
 | P1 | Usikre sikkerhedsspørgsmål | Erstat med kortlivet, engangs-password-reset-link og rate limiting | OSINT-svar alene kan ikke nulstille konto |
 | P2 | Tom registrering | Server-side schema-validering og databaseconstraints | Tomme/udeladte felter giver 4xx, ikke 201 |
@@ -492,6 +632,8 @@ Prioriteringen er en kvalitativ vurdering til undervisningsbrug, ikke en formel 
 - [ ] Gennemgå den faktiske kildekode og angiv konkrete filer/linjer for de tre hovedfund.
 - [ ] Tilføj **redigerede** screenshots af PoC, HTTP-responses og badges.
 - [x] Dokumentér de 19 bekræftede hacking-challenges (17 fra eksport og to SQL Injection-resultater fra 2. november) samt ni fuldførte coding challenges fra seneste eksport.
+- [x] Uddyb SQL Injection med syntaks, kolonnemapping, HTTP-metode og dokumenterede fund.
+- [ ] Gennemfør og verificér Admin Registration med egen HTTP-response og faktisk tildelt rolle.
 - [x] Lav præsentationsguide til 10–15 minutter med de tre fund; selve fremlæggelsen er ikke afholdt.
 - [ ] Valgfri patch eller regressionstest er **ikke** implementeret.
 
