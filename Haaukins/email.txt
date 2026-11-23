@@ -1,0 +1,145 @@
+Delivered-To: simonakrusholm@gmail.com
+Received: by 2002:a05:6838:3c:0:0:0:0 with SMTP id 28csp3576419nkf;
+        Tue, 26 Apr 2022 04:57:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5+FQje2nuvMmfLn3A09xJ8zjf8Ps+UvRbJrnefnGRr0892VXWa+9XLLMFJe789VJBaoEh
+X-Received: by 2002:adf:d1e6:0:b0:20a:a976:1bba with SMTP id g6-20020adfd1e6000000b0020aa9761bbamr18285430wrd.31.1650974237213;
+        Tue, 26 Apr 2022 04:57:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1650974237; cv=none;
+        d=google.com; s=arc-20160816;
+        b=LdeKHDnvjX/BKDPzO1RueG/dht0n7aKyeYRrulfqdazqV/ECHjnwnIqfjQhLbDHVwY
+         eS1Oe8gCs0LYKA4G5/35X6JdjWpVYNhGD1MDMN8pRuJpcf3rAMroj2Zj1u4ke6ridpyH
+         w/mw4rrTd37S38JjDERK65AsMkpFKJfr1RBhYm1BLU9Yzqm9ZGz3VELWgfACbQVKHWBy
+         n8hekJCbI5K1mU9tYSXeELJ+DJMARPG22reVn6rLHfmtXc0VD3BtJW0L6aN5Mm2XyU6M
+         7wBq0/RyXkE4X0w5D1R1+TrF6Vz/2eoyHj50L5xoX4hoXhHe9NMWgycTbR8/GpUoT5Ia
+         du1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=mime-version:feedback-id:message-id:subject:reply-to:from:to
+         :dkim-signature:date;
+        bh=xwSw0cg39hsKtudOf1DhJtqy3NpG7pK50cjVmM5JQVg=;
+        b=HupU7DnrYLnvAupZp9/ZjTHuno+xQDBk5t2L0VcTwKRyGTYMDdLuxjYrGHp0B+aMez
+         zdKD8yR2TavLPs2VEpkFje3EclmwF4JxUsxUG0CX2ffCtREeHBuG53TSha+rM69/Hcmf
+         5f/f+HbeCFymPKYB7s1bQBy/eX739cgKb7nenktY7+GgeWofyvO2Z+K8y9CNdgYUrO6B
+         Q0qYK6+GPrcLUVUTH+tqVpix9nmIHG1KZSpg2Kfo0F4WJDetMUzyclrwF76iIPPinLHM
+         kABOhoTtaCn+92CxQ7Q24+tFCklDDex5RpKZCHE/wWJhjwwhWdXvbAnFbL1A+uFPNl6W
+         oKfQ==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@protonmail.com header.s=protonmail2 header.b=Wdg7abu8;
+       spf=pass (google.com: domain of fniseurt@protonmail.com designates 185.70.43.19 as permitted sender) smtp.mailfrom=fniseurt@protonmail.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=protonmail.com
+Return-Path: <fniseurt@protonmail.com>
+Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch. [185.70.43.19])
+        by mx.google.com with ESMTPS id e6-20020a056000034600b0020ae1499abcsi2454314wre.871.2022.04.26.04.57.17
+        for <simonakrusholm@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Apr 2022 04:57:17 -0700 (PDT)
+Received-SPF: pass (google.com: domain of fniseurt@protonmail.com designates 185.70.43.19 as permitted sender) client-ip=185.70.43.19;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@protonmail.com header.s=protonmail2 header.b=Wdg7abu8;
+       spf=pass (google.com: domain of fniseurt@protonmail.com designates 185.70.43.19 as permitted sender) smtp.mailfrom=fniseurt@protonmail.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=protonmail.com
+Date: Tue, 26 Apr 2022 11:57:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail2; t=1650974236;
+	bh=xwSw0cg39hsKtudOf1DhJtqy3NpG7pK50cjVmM5JQVg=;
+	h=Date:To:From:Reply-To:Subject:Message-ID:Feedback-ID:From:To:Cc:
+	 Date:Subject:Reply-To:Feedback-ID:Message-ID;
+	b=Wdg7abu8AkpBLVo6BYwz95kLkoUkSNp3JtfRjkdK0x2aZBiKgRRGv8YEAmquYnanu
+	 2EGQhful0zeYX7KYk5HPIQgdTJmLWgVV4leUhrIrrACyZAymVGGyMxwdshdjI5iBnx
+	 5LAmL0IEl0zdUYwbQGRV3ewGzSmRAKm5SUamfd09rz3QJwgRCIm4iyaiNMquxLpgKV
+	 OhkmIye9qHqC2DwvdVFE336oX7oIsxQQdSNifgGGwvzLd2bwWLMvXDaTye/RQB+0yc
+	 g887aLtm4+BIcCIvzE3vKBxyg+0sKv3eZPQoasfGuCPOyXXq8T0Mlqf2C7fcenUyu5
+	 CQsymqxQAqlWg==
+To: "simonakrusholm@gmail.com" <simonakrusholm@gmail.com>
+From: Harry Hacker <fniseurt@protonmail.com>
+Reply-To: Harry Hacker <fniseurt@protonmail.com>
+Subject: Her er det efterspurgte materiale
+Message-ID: <hvQ0j0aC2yysdQukLdoByyJLphmQBujZ0owt-hipV7Ozk6p18GiFbo0Xx8nUx4JXJy4NPQ1yuexjUxFqkCK_hfLtd_rFMFyWkKW2AmpuV_A=@protonmail.com>
+Feedback-ID: 46516382:user:proton
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="b1_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU"
+
+This is a multi-part message in MIME format.
+
+--b1_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU
+Content-Type: multipart/alternative;
+ boundary="b2_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU"
+
+--b2_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+S8OmcmUgSGFycnkKCkhlciBlciBkZXQgbWF0ZXJpYWxlIGR1IGVmdGVyc3B1cmd0ZS4KClJlZmVy
+YXRldCBmcmEgbcO4ZGV0IGVyIGZvcnRyb2xpZ3Qgb2cgZGVyZm9yIGtyeXB0ZXJldC4gRGVsdGFn
+ZXJsaXN0ZW4gZXIgaWtrZSBoZW1tZWxpZywgbWVuIGplZyBiZWRlciBkaWcgYWxsaWdldmVsIG9t
+IGlra2UgYXQgdmlkZXJlc2VuZGUgZGVuLgoKSmVnIHNlciBmcmVtIHRpbCB2b3JlcyBuw6ZzdGUg
+bcO4ZGUuCgpWaWdnbwoKU2VudCB3aXRoIFtQcm90b25NYWlsXShodHRwczovL3Byb3Rvbm1haWwu
+Y29tLykgc2VjdXJlIGVtYWlsLg==
+
+--b2_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PGRpdiBzdHlsZT0iZm9udC1mYW1pbHk6IGFyaWFsOyBmb250LXNpemU6IDE0cHg7Ij5Lw6ZyZSBI
+YXJyeQ0KPGJyPjxicj5IZXIgZXIgZGV0IG1hdGVyaWFsZSBkdSBlZnRlcnNwdXJndGUuDQo8YnI+
+PGJyPlJlZmVyYXRldCBmcmEgbcO4ZGV0IGVyIGZvcnRyb2xpZ3Qgb2cgZGVyZm9yIGtyeXB0ZXJl
+dC4gRGVsdGFnZXJsaXN0ZW4gZXINCmlra2UgaGVtbWVsaWcsIG1lbiBqZWcgYmVkZXIgZGlnIGFs
+bGlnZXZlbCBvbSBpa2tlIGF0IHZpZGVyZXNlbmRlIGRlbi4NCjxicj48YnI+SmVnIHNlciBmcmVt
+IHRpbCB2b3JlcyBuw6ZzdGUgbcO4ZGUuDQo8YnI+PGJyPlZpZ2dvPGJyPjwvZGl2PjxkaXYgc3R5
+bGU9ImZvbnQtZmFtaWx5OiBhcmlhbDsgZm9udC1zaXplOiAxNHB4OyI+PGJyPjwvZGl2Pg0KPGRp
+diBjbGFzcz0icHJvdG9ubWFpbF9zaWduYXR1cmVfYmxvY2siIHN0eWxlPSJmb250LWZhbWlseTog
+YXJpYWw7IGZvbnQtc2l6ZTogMTRweDsiPg0KICAgIDxkaXYgY2xhc3M9InByb3Rvbm1haWxfc2ln
+bmF0dXJlX2Jsb2NrLXVzZXIgcHJvdG9ubWFpbF9zaWduYXR1cmVfYmxvY2stZW1wdHkiPg0KDQog
+ICAgICAgICAgICA8L2Rpdj4NCg0KICAgICAgICAgICAgPGRpdiBjbGFzcz0icHJvdG9ubWFpbF9z
+aWduYXR1cmVfYmxvY2stcHJvdG9uIj4NCiAgICAgICAgU2VudCB3aXRoIDxhIHRhcmdldD0iX2Js
+YW5rIiBocmVmPSJodHRwczovL3Byb3Rvbm1haWwuY29tLyIgcmVsPSJub29wZW5lciBub3JlZmVy
+cmVyIj5Qcm90b25NYWlsPC9hPiBzZWN1cmUgZW1haWwuDQogICAgPC9kaXY+DQo8L2Rpdj4NCg==
+
+
+--b2_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU--
+
+--b1_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU
+Content-Type: text/plain; name=Referat.txt
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=Referat.txt
+
+EMT2MeF/IIWSO/n8SxxL0HXxXXBqhpHaXmJayxnw3ikshv6kmHAQXqMJvjR2Q8oKdopgGAkJbmR3
+fqdGL1BGTifO1JSqvYhUZZ6vmquX5TNNt6yNIvnVQpB+CcIDxUQP
+
+--b1_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU
+Content-Type: text/plain; name=Deltagerliste.txt
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=Deltagerliste.txt
+
+TWFkcyBBZ2UNCkNobG9lIEFnZ2VyIA0KTGluZSBBaGwgDQpTdGVuIEFsZGVybWFuZCANCkVqdmlu
+IE90dG8gQmFjaCANCkFzZ2UgQuZyZXINCkthbGxlIEJhbGxlIA0KQWxpIEJoaQ0KVG9tIEJob2xh
+DQpUZWRkeSBCavhybg0KU3RpZyBC+GpsZXNlbiANCkluZ29sZiBCb2xkdA0KV2FsdGhlciBCcmlu
+Z2UNCkJlbiBCcnVoZCANClAuIERhaGwNCkt1cnQgTGFuZ2ViamVyZyBEYWhsDQpBbm5lIERhbQ0K
+Qm8gRGVnYSANCthqdmluIER1ZQ0KVG9tIEVza2UNClBlciBG5mNodA0KTW9hIEZhaHJtYW5uDQpF
+bGxhIEZhbnRoIA0KU3R1cmUgRmVkZGVyc2VuIA0KSGFucyBGZWpsDQpTaWduZSBGZWpsDQpUYWdl
+IEZlamwgDQpTdGVlbiBGaXNrZXINCkhhbnMgR2VtYWdlcg0KUGVyIEdoYW1lbnQgDQpBbGkgR2hh
+dG9yIA0KUGV0ZXIgR29oDQpBbGkgR29yaQ0KQi5PLiBHb3JtIA0KTW9uYSBHcmFobQ0KQW5hIEdy
+YWhtDQpDaGlsbyBHcmFobQ0KQW5uYSBHcmFtIA0KTWllIEdyZWhuZSANClN0ZWVuIEhhYWhyDQpN
+YXJ5IEFubmUgSGFzbWFyaw0KQmVsbGEgSPhqDQpMYXUgSPhqIA0KSmV0dGUgSPhqDQpTdGVuIElz
+YWtzZW4gDQpGaW5uIEplbW0NClRvbSBKZXJuZQ0KTHlra2UgSnV1bCANClBlbGxlIEthaG4NClR1
+ZSBLYWhuIA0KTWFkcyBLZWJhbGwNCkluZ29sZiBL+GhsZQ0KSHVnbyBMYWRlbWFuZCANClJlbW8g
+TGFkZW1hbm4NCkt1cnQgTGFuZyANClBlciBMZW1vaHINCkJvIExlcm8NCkxpc2UgTGV5ZSANClBh
+bGxlIEz4cGh0ZXINCkpldHRlIEx5aHMNCkFubmEgTHloc2UNCkxpdiBNb2hyDQpFanZpbmQgTfhs
+bGVyDQpUaG9yIE5hZG8NCkFubmEgTmFzaA0KU2lnZ2UgTmF0aGFuc2VuIA0KTWFyaWEgTmVocmdy
+YXYNCkNhcmwtSm9oYW4gSmFnZXIgTmllbHNlbg0KUC5FLiBOaXNzZW4gDQpTZXRoZXIgTmlzc2Vu
+IA0KUGlhIE5vaG1hbg0KQm8gTnVzcyANCkpvaGFubmVzIE55bWFuZA0KS2VudCBOeW1hbmQgDQpL
+aW0gT2hubyANCkJvIFDmaGwNClRob3IgUGVkbw0KTHVjeSBQZWxzZW4NClRvcmUgUGVyc2EgDQpQ
+ZXIgUGhpZCANCkhlbGxlIFBoaXNnZw0KQnVlIFBpaGwgDQpCbyBQbGFzcw0KUGVyIFBsZXggDQpM
+eWtrZSBQb2hzZQ0KR2lsbGl2ZXIgUmFpc2ENCkxvbmUgUmFuZ2VyDQrFZ2UgUmFudGhlIA0KQm8g
+UmViaWxsZQ0KTOZya2UgUmVoZGUgDQpMb3R0ZSBSaWV0IA0KTGFzc2UgUnVocw0KQWRhbSBT5mJs
+ZQ0KTWV0dGUgU2FobWUgDQpBbmRlcnMgU2FuZCANCk1vcnRlbiBTYW5kDQpFcmlrIFNjaG9lbg0K
+U3RlZW4gU2VjaGVyIA0KTmlzIFNlZW1hbmQNCk1haiBTZWxsIA0KS2Fpc2EgU2VzYWhyDQpTdGVl
+biBTaWtrZXIgDQpQZXIgU29obg0KS2FybCBTb2huZQ0KU/hyZW4gU29zc2UNClJ1bmUgU3RlZW4g
+DQpFbGxhIFN0aWNrIA0KVGFnZSBTdGlsbGluZw0KSmV0dGUgU3R1ZSANCkJvIFRhbmlnZw0KVHJp
+bmUgVGF0aXMgDQpBbm4gVGVubmENCkxpcyBUZXNjbw0KS2FyZW4gVGjmbmUgDQpQb2xsZSBUaGlt
+YW5kDQpTdGVuIFRoeXNzZW4gDQpCbyBUaWNrDQpCbyBUb2tzIA0KQm8gVHVsaW51cyANCk92ZSBU
+eXJlIA0KSHZpaWQgVW5kZXJsaW4NCkVsbGEgVmF0aG9yIA0KUmFuZGkgVmVqZW4gDQpNZXR0ZSBW
+dW5zDQpLYWlzYSBXaWxoZWxtIA0KQXJtYW5kIFlhY2sgDQpCaWxsIFlhcmQgDQpMaXMgxm5zZW4=
+
+--b1_gRAZqgjGtlEa8UgE1YZwfPx9NdfrthZjED7sIHU--
+

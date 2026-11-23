@@ -1,0 +1,13 @@
+#!/bin/bash
+TARGET="77.204.214.64"
+echo "### Port scan of $TARGET ###"
+sudo nmap -p- -T4 "$TARGET" 2>/dev/null | grep -E "open|PORT"
+echo ""
+echo "### HTTP probe (root) ###"
+curl -s --connect-timeout 3 --max-time 5 -i "http://$TARGET/"
+echo ""
+echo "### HTTP probe (/next_chars) ###"
+curl -s --connect-timeout 3 --max-time 5 -i "http://$TARGET/next_chars?char=a"
+echo ""
+echo "### Reverse DNS check ###"
+getent hosts "$TARGET" || echo "(no DNS name, as expected)"

@@ -1,0 +1,641 @@
+################ FRAME 7265 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 7361 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=m HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=m HTTP/1.1\r\n]
+            [GET /next_chars?char=m HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=m
+            Request URI Path: /next_chars
+            Request URI Query: char=m
+                Request URI Query Parameter: char=m
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=m]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 7381 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=p HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=p HTTP/1.1\r\n]
+            [GET /next_chars?char=p HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=p
+            Request URI Path: /next_chars
+            Request URI Query: char=p
+                Request URI Query Parameter: char=p
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=p]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 8018 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=d HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=d HTTP/1.1\r\n]
+            [GET /next_chars?char=d HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=d
+            Request URI Path: /next_chars
+            Request URI Query: char=d
+                Request URI Query Parameter: char=d
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=d]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 8035 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=w HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=w HTTP/1.1\r\n]
+            [GET /next_chars?char=w HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=w
+            Request URI Path: /next_chars
+            Request URI Query: char=w
+                Request URI Query Parameter: char=w
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=w]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 8108 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=r HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=r HTTP/1.1\r\n]
+            [GET /next_chars?char=r HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=r
+            Request URI Path: /next_chars
+            Request URI Query: char=r
+                Request URI Query Parameter: char=r
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=r]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 8135 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=a HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=a HTTP/1.1\r\n]
+            [GET /next_chars?char=a HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=a
+            Request URI Path: /next_chars
+            Request URI Query: char=a
+                Request URI Query Parameter: char=a
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=a]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 8158 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 9902 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=m HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=m HTTP/1.1\r\n]
+            [GET /next_chars?char=m HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=m
+            Request URI Path: /next_chars
+            Request URI Query: char=m
+                Request URI Query Parameter: char=m
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=m]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 9921 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=p HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=p HTTP/1.1\r\n]
+            [GET /next_chars?char=p HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=p
+            Request URI Path: /next_chars
+            Request URI Query: char=p
+                Request URI Query Parameter: char=p
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: python-requests/2.31.0\r\n
+    Accept-Encoding: gzip, deflate, br\r\n
+    Accept: */*\r\n
+    Connection: keep-alive\r\n
+    Session-Token: good-session-token\r\n
+    URL: /flag\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=p]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 10650 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 12413 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=m HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=m HTTP/1.1\r\n]
+            [GET /next_chars?char=m HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=m
+            Request URI Path: /next_chars
+            Request URI Query: char=m
+                Request URI Query Parameter: char=m
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=m]
+    [HTTP request 1/1]
+
+
+################ FRAME 12427 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=p HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=p HTTP/1.1\r\n]
+            [GET /next_chars?char=p HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=p
+            Request URI Path: /next_chars
+            Request URI Query: char=p
+                Request URI Query Parameter: char=p
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=p]
+    [HTTP request 1/1]
+
+
+################ FRAME 12445 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=d HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=d HTTP/1.1\r\n]
+            [GET /next_chars?char=d HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=d
+            Request URI Path: /next_chars
+            Request URI Query: char=d
+                Request URI Query Parameter: char=d
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=d]
+    [HTTP request 1/1]
+
+
+################ FRAME 12459 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=w HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=w HTTP/1.1\r\n]
+            [GET /next_chars?char=w HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=w
+            Request URI Path: /next_chars
+            Request URI Query: char=w
+                Request URI Query Parameter: char=w
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=w]
+    [HTTP request 1/1]
+
+
+################ FRAME 12471 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=r HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=r HTTP/1.1\r\n]
+            [GET /next_chars?char=r HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=r
+            Request URI Path: /next_chars
+            Request URI Query: char=r
+                Request URI Query Parameter: char=r
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=r]
+    [HTTP request 1/1]
+
+
+################ FRAME 12509 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=a HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=a HTTP/1.1\r\n]
+            [GET /next_chars?char=a HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=a
+            Request URI Path: /next_chars
+            Request URI Query: char=a
+                Request URI Query Parameter: char=a
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=a]
+    [HTTP request 1/1]
+
+
+################ FRAME 12523 ################
+Hypertext Transfer Protocol
+    GET / HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET / HTTP/1.1\r\n]
+            [GET / HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Connection: keep-alive\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 15077 ################
+Hypertext Transfer Protocol
+    POST /keycheck HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): POST /keycheck HTTP/1.1\r\n]
+            [POST /keycheck HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: POST
+        Request URI: /keycheck
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:109.0) Gecko/20100101 Firefox/115.0\r\n
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n
+    Accept-Language: en-US,en;q=0.5\r\n
+    Accept-Encoding: gzip, deflate\r\n
+    Content-Type: text/plain\r\n
+    Content-Length: 17\r\n
+        [Content length: 17]
+    Origin: http://secret-server.hkn\r\n
+    Connection: keep-alive\r\n
+    Referer: http://secret-server.hkn/\r\n
+    Upgrade-Insecure-Requests: 1\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/keycheck]
+    [HTTP request 1/1]
+    File Data: 17 bytes
+Line-based text data: text/plain (1 lines)
+    key=my-password\r\n
+[Packet size limited during capture: HTTP truncated]
+
+
+################ FRAME 15104 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsInRpbWVzdGFtcCI6MTMwMDAwMDAwMH0.5hQcQuBN2aj1hx5NAuVyZlzimDTEt11tfsq9EaHiKaU\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 15158 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwidGltZXN0YW1wIjoyMDAzNDMyNjc1fQ.UzBYpt42LunaOSfc2eHGjlpE6d5bw1TXkcNIZOj5x7k\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 17433 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwidGltZXN0YW1wIjoxMzAwMDAwMDAwfQ.d-H00PqEmUozSDiQxSRWBYeyIqvuaTifVVBHlKaE2Wc\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 17446 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwidGltZXN0YW1wIjoxMzAwMDAwMDAwfQ.d-H00PqEmUozSDiQxSRWBYeyIqvuaTifVVBHlKaE2Wc\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 17459 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwidGltZXN0YW1wIjoxMzAwMDAwMDAwfQ.d-H00PqEmUozSDiQxSRWBYeyIqvuaTifVVBHlKaE2Wc\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 17473 ################
+Hypertext Transfer Protocol
+    GET /next_chars?char=s HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /next_chars?char=s HTTP/1.1\r\n]
+            [GET /next_chars?char=s HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /next_chars?char=s
+            Request URI Path: /next_chars
+            Request URI Query: char=s
+                Request URI Query Parameter: char=s
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwidGltZXN0YW1wIjoxMzAwMDAwMDAwfQ.d-H00PqEmUozSDiQxSRWBYeyIqvuaTifVVBHlKaE2Wc\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/next_chars?char=s]
+    [HTTP request 1/1]
+
+
+################ FRAME 17496 ################
+Hypertext Transfer Protocol
+    GET /flag HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET /flag HTTP/1.1\r\n]
+            [GET /flag HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: /flag
+        Request Version: HTTP/1.1
+    Host: secret-server.hkn\r\n
+    User-Agent: curl/8.4.0\r\n
+    Accept: */*\r\n
+    Session-Token: very-good-session-token\r\n
+    \r\n
+    [Full request URI: http://secret-server.hkn/flag]
+    [HTTP request 1/1]
+[Packet size limited during capture: HTTP truncated]
+
+

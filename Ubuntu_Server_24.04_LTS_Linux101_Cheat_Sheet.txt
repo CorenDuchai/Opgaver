@@ -1,0 +1,440 @@
+# Ubuntu Server 24.04 LTS — Linux 101 CLI Cheat Sheet
+
+## Hostname til opgaven
+
+Brug fx:
+
+    securebase
+
+eller lidt mere tydeligt:
+
+    linux101-securebase
+
+Et "sigende hostname" betyder bare et navn, der fortæller hvad maskinen er til.
+Det behøver ikke være smart.
+
+Sæt hostname:
+
+    sudo hostnamectl set-hostname linux101-securebase
+
+Kontrollér:
+
+    hostname
+    hostnamectl
+
+
+## Navigation
+
+    pwd                     # Vis nuværende mappe
+    ls                      # Vis filer
+    ls -l                   # Detaljeret liste
+    ls -la                  # Inkl. skjulte filer
+    cd /sti                 # Skift mappe
+    cd ..                   # Ét niveau op
+    cd ~                    # Hjemmemappe
+    clear                   # Ryd terminalen
+    history                 # Tidligere kommandoer
+
+
+## Filer og mapper
+
+    mkdir mappe              # Opret mappe
+    mkdir -p a/b/c           # Opret hele mappestrukturen
+    touch fil.txt            # Opret tom fil
+    cp fil1 fil2             # Kopiér fil
+    cp -r mappe1 mappe2      # Kopiér mappe
+    mv gammel ny             # Flyt / omdøb
+    rm fil                   # Slet fil
+    rm -r mappe              # Slet mappe
+    cat fil                  # Vis fil
+    less fil                 # Vis fil sidevis
+    head fil                 # Første linjer
+    tail fil                 # Sidste linjer
+    tail -f fil              # Følg fil live
+
+
+## Nano
+
+    nano fil
+
+Genveje:
+
+    Ctrl+O    Gem
+    Ctrl+X    Afslut
+    Ctrl+W    Søg
+    Ctrl+K    Klip linje
+    Ctrl+U    Indsæt
+
+
+## sudo / root / identitet
+
+    sudo kommando
+    sudo -i                  # Root-shell
+    exit                     # Forlad shell
+    whoami                   # Aktuel bruger
+    id                       # UID, GID og grupper
+
+
+## Pakker — APT
+
+    sudo apt update
+    sudo apt upgrade
+    sudo apt install <pakke>
+    sudo apt remove <pakke>
+    sudo apt purge <pakke>
+    sudo apt autoremove
+    apt search <navn>
+    apt list --installed
+
+Eksempel:
+
+    sudo apt install openssh-server
+
+
+## Netværk
+
+    ip addr
+    ip a
+    ip route
+    ip link
+    hostname
+    hostnamectl
+    ping 8.8.8.8
+    ping google.com
+    resolvectl status
+    ss -tulpn
+    ss -tlnp
+
+
+## Netplan — statisk IP
+
+Find konfigurationsfil:
+
+    ls /etc/netplan/
+
+Redigér:
+
+    sudo nano /etc/netplan/<fil>.yaml
+
+Eksempel:
+
+    network:
+      version: 2
+      ethernets:
+        eth0:
+          dhcp4: false
+          addresses:
+            - 10.10.10.10/24
+
+Test:
+
+    sudo netplan try
+
+Anvend:
+
+    sudo netplan apply
+
+
+## Brugere
+
+    sudo adduser axel
+    sudo deluser axel
+    id axel
+    getent passwd axel
+    sudo passwd -l axel
+    sudo passwd -u axel
+
+
+## Grupper
+
+    sudo groupadd developers
+    sudo groupdel developers
+    sudo usermod -aG developers axel
+    groups axel
+    getent group developers
+
+VIGTIGT:
+Brug "-aG" når en bruger tilføjes til ekstra grupper.
+
+
+## Filrettigheder
+
+    ls -l
+    chmod 640 fil
+    chmod 750 mappe
+    chown bruger fil
+    chown bruger:gruppe fil
+    chgrp gruppe fil
+
+Tal:
+
+    r = read    = 4
+    w = write   = 2
+    x = execute = 1
+
+    7 = rwx
+    6 = rw-
+    5 = r-x
+    4 = r--
+    0 = ---
+
+Eksempel på delt projektmappe:
+
+    sudo chown root:developers /srv/project
+    sudo chmod 2770 /srv/project
+
+2 foran 770 = setgid, så nye filer arver gruppen.
+
+
+## ACL
+
+Installer:
+
+    sudo apt install acl
+
+Se ACL:
+
+    getfacl fil
+
+Giv bruger adgang:
+
+    setfacl -m u:axel:rwx mappe
+
+Fjern adgang:
+
+    setfacl -x u:axel mappe
+
+Standard-ACL:
+
+    setfacl -d -m u:axel:rwx mappe
+
+
+## SSH
+
+Status:
+
+    systemctl status ssh
+
+Start / stop / restart:
+
+    sudo systemctl start ssh
+    sudo systemctl stop ssh
+    sudo systemctl restart ssh
+
+Konfiguration:
+
+    sudo nano /etc/ssh/sshd_config
+
+Relevante indstillinger:
+
+    PermitRootLogin no
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+
+Test konfiguration:
+
+    sudo sshd -t
+
+Restart:
+
+    sudo systemctl restart ssh
+
+
+## SSH fra klienten
+
+Lav nøgle:
+
+    ssh-keygen
+
+Forbind:
+
+    ssh bruger@10.10.10.10
+
+Med bestemt nøgle:
+
+    ssh -i ~/.ssh/id_ed25519 bruger@10.10.10.10
+
+
+## Services — systemd
+
+    systemctl status <service>
+    sudo systemctl start <service>
+    sudo systemctl stop <service>
+    sudo systemctl restart <service>
+    sudo systemctl enable <service>
+    sudo systemctl disable <service>
+    systemctl --type=service --state=running
+
+
+## Firewall — UFW
+
+    sudo ufw status
+    sudo ufw status verbose
+    sudo ufw enable
+    sudo ufw disable
+
+Standardpolitik:
+
+    sudo ufw default deny incoming
+    sudo ufw default allow outgoing
+
+Tillad SSH:
+
+    sudo ufw allow 22/tcp
+
+Kun fra internt subnet:
+
+    sudo ufw allow from 10.10.10.0/24 to any port 22 proto tcp
+
+Se nummererede regler:
+
+    sudo ufw status numbered
+
+Slet regel:
+
+    sudo ufw delete <nummer>
+
+
+## Processer / performance
+
+    ps aux
+    top
+    uptime
+    free -h
+    df -h
+    du -sh <mappe>
+
+Valgfrit:
+
+    sudo apt install htop
+    htop
+
+
+## Logs
+
+    journalctl
+    journalctl -b
+    journalctl -f
+    journalctl -p err
+    journalctl -u ssh
+    journalctl -u ssh --since "1 hour ago"
+    journalctl -u ssh | grep -i failed
+
+Traditionelle logs:
+
+    ls /var/log/
+
+
+## Login / brugere
+
+    who
+    w
+    last
+    sudo lastb
+
+
+## Søgning
+
+    grep "tekst" fil
+    grep -i "tekst" fil
+    grep -R "tekst" /mappe
+
+Eksempel:
+
+    journalctl -u ssh | grep -i "failed password"
+
+Find filer:
+
+    find / -name "filnavn" 2>/dev/null
+
+
+## Pipes og redirect
+
+    kommando > fil           # Overskriv
+    kommando >> fil          # Tilføj
+    kommando 2> fejl.log     # stderr
+    kommando | grep tekst
+
+Eksempel:
+
+    df -h >> health.log
+
+
+## Bash scripts
+
+Start:
+
+    #!/bin/bash
+    set -euo pipefail
+
+Gør script executable:
+
+    chmod +x script.sh
+
+Kør:
+
+    ./script.sh
+
+
+## Cron
+
+Redigér:
+
+    crontab -e
+
+Se:
+
+    crontab -l
+
+Eksempel — hvert 5. minut:
+
+    */5 * * * * /usr/local/bin/monitor.sh
+
+
+## Vigtige Linux-stier
+
+    /etc        Systemkonfiguration
+    /home       Brugernes hjemmemapper
+    /root       Roots hjemmemappe
+    /var        Variable data
+    /var/log    Logs
+    /tmp        Midlertidige filer
+    /usr        Programmer og biblioteker
+    /srv        Data leveret af server-services
+    /opt        Ekstra software
+    /dev        Devices
+    /proc       Kernel/process-information
+
+
+## De kommandoer du sandsynligvis bruger mest
+
+    sudo
+    cd
+    ls -la
+    nano
+    cat
+    grep
+    ip a
+    ip route
+    ss -tulpn
+    systemctl
+    journalctl
+    chmod
+    chown
+    id
+    groups
+    apt
+    ufw
+    ssh
+
+
+## Linux 101 — huskeregel
+
+Du behøver ikke "kunne Linux" udenad.
+Det vigtige er at kunne:
+
+1. finde rundt,
+2. forstå hvad en kommando gør,
+3. slå syntaks op,
+4. dokumentere hvorfor du valgte konfigurationen,
+5. verificere resultatet bagefter.

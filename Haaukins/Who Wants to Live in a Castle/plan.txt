@@ -1,0 +1,19 @@
+You’ve been walking too close to the edge.
+
+The MedCore job left noise - more than you think.  
+Logs, callbacks, lease records… your infrastructure is bleeding metadata.
+
+We need to move away from all of it.  
+
+No more centralized endpoints. No more rented boxes tied to names or wallets they can follow.  
+
+We go fully decentralized. Onion-based C2, ephemeral bridges, no persistence — just shadows moving in layers.
+
+I’ve prepped what we need here in Lisbon.   
+The safehouse is ready. No paper, no signal, no trail.  
+We’ll rebuild from scratch — like it should’ve been from the start.
+
+Come alone. Bring nothing you’ve touched since MedCore.  
+Burn this after reading. HKN{4_n3w_st4rt}
+
+– J
